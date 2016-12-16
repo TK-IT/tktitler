@@ -8,11 +8,42 @@ gfyear = 2016
 
 
 def prefix(titletupel, gfyear=gfyear, type="normal"):
-    pass
+    root, period = titletupel
+
+    if not isinstance(root, str):
+        raise TypeError(type(root).__name__)
+    if not isinstance(period, int):
+        raise TypeError(type(period).__name__)
+
+    age = gfyear - period
+
+    def normal(n):
+        return n
+
+    def unicode_superscript(n):
+        digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
+        return ''.join(digits[int(i)] for i in str(n))
+
+    sup_fn = normal
+
+    if type == "unicode":
+        sup_fn = unicode_superscript
+    else:
+        pass
+
+    prefix = ['K', '', 'G', 'B', 'O', 'TO']
+    if age < -1:
+        return 'K%s' % sup_fn(-age)
+    elif age + 1 < len(prefix):
+        return prefix[age + 1] + root
+    else:
+        return 'T%sO%s' % (sup_fn(age - 3), root)
 
 
 def kprefix(titletupel, gfyear=gfyear, type="normal"):
-    pass
+    root, period = titletupel
+    period -= 1
+    return "K" + prefix((root, period), gfyear, type)
 
 
 def postfix(titletupel, gfyear=gfyear, type="single"):
@@ -25,25 +56,6 @@ def email(titletupel, gfyear=gfyear, type="postfix"):
 
 def parse(alias, gfyear=gfyear):
     pass  # return (root, period)
-
-
-def unicode_superscript(n):
-    digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
-    return ''.join(digits[int(i)] for i in str(n))
-
-
-def tk_prefix(age, sup_fn=None):
-    if not isinstance(age, int):
-        raise TypeError(type(age).__name__)
-    if sup_fn is None:
-        sup_fn = unicode_superscript
-    prefix = ['K', '', 'G', 'B', 'O', 'TO']
-    if age < -1:
-        return 'K%s' % sup_fn(-age)
-    elif age + 1 < len(prefix):
-        return prefix[age + 1]
-    else:
-        return 'T%sO' % sup_fn(age - 3)
 
 
 def get_period(prefix, postfix, gfyear):
