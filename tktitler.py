@@ -4,6 +4,29 @@ from __future__ import unicode_literals
 import re
 
 
+gfyear = 2016
+
+
+def prefix(titletupel, gfyear=gfyear, type="normal"):
+    pass
+
+
+def kprefix(titletupel, gfyear=gfyear, type="normal"):
+    pass
+
+
+def postfix(titletupel, gfyear=gfyear, type="single"):
+    pass
+
+
+def email(titletupel, gfyear=gfyear, type="postfix"):
+    pass
+
+
+def parse(alias, gfyear=gfyear):
+    pass  # return (root, period)
+
+
 def unicode_superscript(n):
     digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
     return ''.join(digits[int(i)] for i in str(n))
