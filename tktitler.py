@@ -51,8 +51,39 @@ def kprefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     return "K" + prefix((root, period), gfyear, type)
 
 
-def postfix(titletupel, gfyear=gfyear, type="single"):
-    pass
+POSTFIXTYPE_SINGLE = "single"  # FUHØ11
+POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
+POSTFIXTYPE_SLASH = "slash"  # FUHØ11/12
+POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
+POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
+
+
+def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
+    root, period = titletupel
+
+    if not isinstance(root, str):
+        raise TypeError(type(root).__name__)
+    if not isinstance(period, int):
+        raise TypeError(type(period).__name__)
+    if not len(str(period)) == 4:
+        raise ValueError("\'%s\' is not a valid period" % period)
+
+    postfix = ""
+
+    if type == POSTFIXTYPE_SINGLE:
+        postfix = str(period)[2:4]
+    elif type == POSTFIXTYPE_DOUBLE:
+        postfix = str(period)[2:4] + str(period+1)[2:4]
+    elif type == POSTFIXTYPE_SLASH:
+        postfix = str(period)[2:4] + "/" + str(period+1)[2:4]
+    elif type == POSTFIXTYPE_LONGSINGLE:
+        postfix = str(period)
+    elif type == POSTFIXTYPE_LONGSLASH:
+        postfix = str(period) + "/" + str(period+1)
+    else:
+        raise ValueError("\'%s\' is not a valid type-parameter" % type)
+
+    return "" + root + postfix
 
 
 def email(titletupel, gfyear=gfyear, type="postfix"):
