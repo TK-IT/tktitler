@@ -38,7 +38,7 @@ def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
 
     prefix = ['K', '', 'G', 'B', 'O', 'TO']
     if age < -1:
-        return 'K%s' % sup_fn(-age)
+        return 'K%s' % sup_fn(-age) + root
     elif age + 1 < len(prefix):
         return prefix[age + 1] + root
     else:
