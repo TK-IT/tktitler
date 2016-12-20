@@ -47,6 +47,10 @@ def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
 
 def kprefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     root, period = titletupel
+    age = gfyear - period
+    if age <= -1:
+        return prefix((root, period), gfyear, type)
+
     period -= 1
     return "K" + prefix((root, period), gfyear, type)
 
