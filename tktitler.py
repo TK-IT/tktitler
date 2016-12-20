@@ -7,7 +7,11 @@ import re
 gfyear = 2016
 
 
-def prefix(titletupel, gfyear=gfyear, type="normal"):
+PREFIXTYPE_NORMAL = "normal"
+PREFIXTYPE_UNICODE = "unicode"
+
+
+def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     root, period = titletupel
 
     if not isinstance(root, str):
@@ -17,19 +21,20 @@ def prefix(titletupel, gfyear=gfyear, type="normal"):
 
     age = gfyear - period
 
-    def normal(n):
+    def identity(n):
         return n
 
     def unicode_superscript(n):
         digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
         return ''.join(digits[int(i)] for i in str(n))
 
-    sup_fn = normal
-
-    if type == "unicode":
+    sup_fn = None
+    if type == PREFIXTYPE_NORMAL:
+        sup_fn = identity
+    elif type == PREFIXTYPE_UNICODE:
         sup_fn = unicode_superscript
     else:
-        pass
+        raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
     prefix = ['K', '', 'G', 'B', 'O', 'TO']
     if age < -1:
@@ -40,7 +45,7 @@ def prefix(titletupel, gfyear=gfyear, type="normal"):
         return 'T%sO%s' % (sup_fn(age - 3), root)
 
 
-def kprefix(titletupel, gfyear=gfyear, type="normal"):
+def kprefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     root, period = titletupel
     period -= 1
     return "K" + prefix((root, period), gfyear, type)
