@@ -65,6 +65,14 @@ class TestPrefixNormal(unittest.TestCase):
         self.assertEqual(prefix(("This is a quite long string", 2012), 2016),
                          "TOThis is a quite long string")
 
+    def test_explicit_type_plus_2(self):
+        self.assertEqual(prefix(("CERM", 2018), 2016, type=PREFIXTYPE_NORMAL),
+                         "K2CERM")
+
+    def test_explicit_type_minus_15(self):
+        self.assertEqual(prefix(("CERM", 2001), 2016, type=PREFIXTYPE_NORMAL),
+                         "T12OCERM")
+
     def test_validation_root_int(self):
         with self.assertRaisesRegex(TypeError,
                                     "int is not a valid type for root."):
