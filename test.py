@@ -65,6 +65,26 @@ class TestPrefixNormal(unittest.TestCase):
         self.assertEqual(prefix(("This is a quite long string", 2012), 2016),
                          "TOThis is a quite long string")
 
+    def test_validation_root_int(self):
+        with self.assertRaisesRegex(TypeError,
+                                    "int is not a valid type for root."):
+            prefix((0, 2012), 2016)
+
+    def test_validation_period_float(self):
+        with self.assertRaisesRegex(TypeError,
+                                    "float is not a valid type for period."):
+            prefix(("CERM", 2012.), 2016)
+
+    def test_validation_period_string(self):
+        with self.assertRaisesRegex(TypeError,
+                                    "str is not a valid type for period."):
+            prefix(("CERM", '2012'), 2016)
+
+    def test_validation_gfyear_string(self):
+        with self.assertRaisesRegex(TypeError,
+                                    "str is not a valid type for gfyear."):
+            prefix(("CERM", 2012), "2016")
+
 
 class TestPrefixUnicode(unittest.TestCase):
 

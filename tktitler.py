@@ -12,7 +12,7 @@ PREFIXTYPE_UNICODE = "unicode"
 
 
 def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
-    __validate_titletupel(titletupel)
+    __validate(titletupel, gfyear)
 
     root, period = titletupel
     root = __funny_substitute(root)
@@ -60,7 +60,7 @@ POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
 def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
-    __validate_titletupel(titletupel)
+    __validate(titletupel, gfyear)
 
     root, period = titletupel
     root = __funny_substitute(root)
@@ -88,7 +88,7 @@ EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
 def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
-    __validate_titletupel(titletupel)
+    __validate(titletupel, gfyear)
 
     root, period = titletupel
 
@@ -111,14 +111,21 @@ def parse(alias, gfyear=gfyear):
     pass  # return (root, period)
 
 
-def __validate_titletupel(titletupel):
+def __validate(titletupel, gfyear):
     root, period = titletupel
     if not isinstance(root, str):
-        raise TypeError(type(root).__name__)
+        raise TypeError(
+            "%s is not a valid type for root." % type(root).__name__)
     if not isinstance(period, int):
-        raise TypeError(type(period).__name__)
+        raise TypeError(
+            "%s is not a valid type for period." % type(period).__name__)
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
+    if not isinstance(gfyear, int):
+        raise TypeError(
+            "%s is not a valid type for gfyear." % type(gfyear).__name__)
+    if not len(str(gfyear)) == 4:
+        raise ValueError("\'%s\' is not a valid gfyear" % gfyear)
 
 
 def __funny_substitute(root):
