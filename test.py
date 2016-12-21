@@ -1,5 +1,5 @@
 import unittest
-from tktitler import prefix, PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE
+from tktitler import prefix, PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE, kprefix
 
 
 class TestPrefixNormal(unittest.TestCase):
@@ -127,5 +127,31 @@ class TestPrefixUnicode(unittest.TestCase):
     def test_year_plus_15(self):
         self.assertEqual(prefix(("CERM", 2031), 2016, type=PREFIXTYPE_UNICODE),
                          "K¹⁵CERM")
+
+
+class TestKprefix(unittest.TestCase):
+
+    def test_sameyear(self):
+        self.assertEqual(kprefix(("CERM", 2016), 2016), "KGCERM")
+
+    def test_year_minus_01(self):
+        self.assertEqual(kprefix(("CERM", 2015), 2016), "KBCERM")
+
+    def test_year_minus_04(self):
+        self.assertEqual(kprefix(("CERM", 2012), 2016), "KT2OCERM")
+
+    def test_year_minus_05(self):
+        self.assertEqual(kprefix(("CERM", 2011), 2016), "KT3OCERM")
+
+    def test_year_plus_1(self):
+        self.assertEqual(kprefix(("CERM", 2017), 2016), "KCERM")
+
+    def test_year_plus_2(self):
+        self.assertEqual(kprefix(("CERM", 2018), 2016), "K2CERM")
+
+    def test_unicode_year_minus_05(self):
+        self.assertEqual(kprefix(("CERM", 2011), 2016,
+                                 type=PREFIXTYPE_UNICODE), "KT³OCERM")
+
 if __name__ == '__main__':
     unittest.main()
