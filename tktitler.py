@@ -94,8 +94,33 @@ def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
     return "" + root + postfix
 
 
-def email(titletupel, gfyear=gfyear, type="postfix"):
-    pass
+EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
+EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
+
+
+def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
+    root, period = titletupel
+
+    if not isinstance(root, str):
+        raise TypeError(type(root).__name__)
+    if not isinstance(period, int):
+        raise TypeError(type(period).__name__)
+    if not len(str(period)) == 4:
+        raise ValueError("\'%s\' is not a valid period" % period)
+
+    replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
+                    'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
+    root = __multireplace(root, replace_dict)
+
+    prefix_ = ""
+    postfix_ = ""
+    if type == EMAILTYPE_POSTFIX:
+        postfix_ = str(period)[2:4]
+    elif type == EMAILTYPE_PREFIX:
+        prefix_ = prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+    else:
+        raise ValueError("\'%s\' is not a valid type-parameter" % type)
+    return "" + prefix_ + root + postfix_
 
 
 def parse(alias, gfyear=gfyear):
