@@ -12,15 +12,10 @@ PREFIXTYPE_UNICODE = "unicode"
 
 
 def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
+    __validate_titletupel(titletupel)
+
     root, period = titletupel
-
-    if not isinstance(root, str):
-        raise TypeError(type(root).__name__)
-    if not isinstance(period, int):
-        raise TypeError(type(period).__name__)
-
     root = __funny_substitute(root)
-
     age = gfyear - period
 
     def identity(n):
@@ -65,15 +60,9 @@ POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
 def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
+    __validate_titletupel(titletupel)
+
     root, period = titletupel
-
-    if not isinstance(root, str):
-        raise TypeError(type(root).__name__)
-    if not isinstance(period, int):
-        raise TypeError(type(period).__name__)
-    if not len(str(period)) == 4:
-        raise ValueError("\'%s\' is not a valid period" % period)
-
     root = __funny_substitute(root)
 
     postfix = ""
@@ -99,14 +88,9 @@ EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
 def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
-    root, period = titletupel
+    __validate_titletupel(titletupel)
 
-    if not isinstance(root, str):
-        raise TypeError(type(root).__name__)
-    if not isinstance(period, int):
-        raise TypeError(type(period).__name__)
-    if not len(str(period)) == 4:
-        raise ValueError("\'%s\' is not a valid period" % period)
+    root, period = titletupel
 
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
@@ -125,6 +109,16 @@ def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
 
 def parse(alias, gfyear=gfyear):
     pass  # return (root, period)
+
+
+def __validate_titletupel(titletupel):
+    root, period = titletupel
+    if not isinstance(root, str):
+        raise TypeError(type(root).__name__)
+    if not isinstance(period, int):
+        raise TypeError(type(period).__name__)
+    if not len(str(period)) == 4:
+        raise ValueError("\'%s\' is not a valid period" % period)
 
 
 def __funny_substitute(root):
