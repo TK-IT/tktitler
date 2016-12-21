@@ -1,5 +1,10 @@
 language: python
+install:
+  - pip install coveralls
 python:
   - "3.5"
   - "3.6-dev"
 script: python test.py
+
+after_success:
+  coveralls
