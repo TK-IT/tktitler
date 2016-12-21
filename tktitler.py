@@ -19,6 +19,8 @@ def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     if not isinstance(period, int):
         raise TypeError(type(period).__name__)
 
+    root = __funny_substitute(root)
+
     age = gfyear - period
 
     def identity(n):
@@ -72,6 +74,8 @@ def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
 
+    root = __funny_substitute(root)
+
     postfix = ""
 
     if type == POSTFIXTYPE_SINGLE:
@@ -97,6 +101,11 @@ def email(titletupel, gfyear=gfyear, type="postfix"):
 def parse(alias, gfyear=gfyear):
     pass  # return (root, period)
 
+
+def __funny_substitute(root):
+    if root == 'KASS':
+        return 'KA$$'
+    return root
 
 def get_period(prefix, postfix, gfyear):
     """
