@@ -1,5 +1,8 @@
 import unittest
-from tktitler import prefix, PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE, kprefix
+from tktitler import (prefix, PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE, kprefix,
+                      postfix, POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE,
+                      POSTFIXTYPE_SLASH, POSTFIXTYPE_LONGSINGLE,
+                      POSTFIXTYPE_LONGSLASH)
 
 
 class TestPrefixNormal(unittest.TestCase):
@@ -152,6 +155,33 @@ class TestKprefix(unittest.TestCase):
     def test_unicode_year_minus_05(self):
         self.assertEqual(kprefix(("CERM", 2011), 2016,
                                  type=PREFIXTYPE_UNICODE), "KT³OCERM")
+
+
+class TestPostfix(unittest.TestCase):
+
+    def test_notype(self):
+        self.assertEqual(postfix(("CERM", 2016)), "CERM16")
+
+    def test_explicit_type(self):
+        self.assertEqual(postfix(("CERM", 2016), type=POSTFIXTYPE_SINGLE),
+                         "CERM16")
+
+    def test_double(self):
+        self.assertEqual(postfix(("CERM", 2016), type=POSTFIXTYPE_DOUBLE),
+                         "CERM1617")
+
+    def test_slash(self):
+        self.assertEqual(postfix(("CERM", 2016), type=POSTFIXTYPE_SLASH),
+                         "CERM16/17")
+
+    def test_longsingle(self):
+        self.assertEqual(postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSINGLE),
+                         "CERM2016")
+
+    def test_longslash(self):
+        self.assertEqual(postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSLASH),
+                         "CERM2016/2017")
+
 
 if __name__ == '__main__':
     unittest.main()
