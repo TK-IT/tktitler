@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import re
+import functools
 
 
 gfyear = 2016
@@ -9,6 +10,32 @@ gfyear = 2016
 
 PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
+
+
+class _Override(object):
+    def __init__(self, context_gfyear):
+        self.context_gfyear = context_gfyear
+
+    def __enter__(self):
+        global gfyear
+        self.prev_gfyear = gfyear
+        gfyear = self.context_gfyear
+
+    def __exit__(self, exc_type, exc_value, exc_traceback):
+        global gfyear
+        gfyear = self.prev_gfyear
+
+    def __call__(self, fun):
+        @functools.wraps(fun)
+        def wrapped(*args, **kwargs):
+            with self:
+                return fun(*args, **kwargs)
+
+        return wrapped
+
+
+def override(gfyear):
+    return _Override(gfyear)
 
 
 def tk_prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
