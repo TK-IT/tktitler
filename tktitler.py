@@ -12,6 +12,19 @@ PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
 
 
+def get_gfyear(argument_gfyear=None):
+    if argument_gfyear is None:
+        r = gfyear
+    else:
+        r = argument_gfyear
+    if not isinstance(r, int):
+        raise TypeError(
+            "%s is not a valid type for gfyear." % type(r).__name__)
+    if len(str(r)) != 4:
+        raise ValueError("\'%s\' is not a valid gfyear" % r)
+    return r
+
+
 class _Override(object):
     def __init__(self, context_gfyear):
         self.context_gfyear = context_gfyear
@@ -150,11 +163,7 @@ def _validate(titletupel, gfyear):
             "%s is not a valid type for period." % type(period).__name__)
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
-    if not isinstance(gfyear, int):
-        raise TypeError(
-            "%s is not a valid type for gfyear." % type(gfyear).__name__)
-    if not len(str(gfyear)) == 4:
-        raise ValueError("\'%s\' is not a valid gfyear" % gfyear)
+    return get_gfyear(gfyear)
 
 
 def _funny_substitute(root):
