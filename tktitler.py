@@ -96,15 +96,15 @@ def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
 
-    prefix_ = ""
-    postfix_ = ""
+    prefix = ""
+    postfix = ""
     if type == EMAILTYPE_POSTFIX:
-        postfix_ = str(period)[2:4]
+        postfix = str(period)[2:4]
     elif type == EMAILTYPE_PREFIX:
-        prefix_ = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+        prefix = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
-    return "" + prefix_ + root + postfix_
+    return "" + prefix + root + postfix
 
 
 def parse(alias, gfyear=gfyear):
