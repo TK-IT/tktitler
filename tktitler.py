@@ -11,7 +11,7 @@ PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
 
 
-def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
+def tk_prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     _validate(titletupel, gfyear)
 
     root, period = titletupel
@@ -46,10 +46,10 @@ def kprefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
     root, period = titletupel
     age = gfyear - period
     if age <= -1:
-        return prefix((root, period), gfyear, type)
+        return tk_prefix((root, period), gfyear, type)
 
     period -= 1
-    return "K" + prefix((root, period), gfyear, type)
+    return "K" + tk_prefix((root, period), gfyear, type)
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
@@ -59,7 +59,7 @@ POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
-def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
+def tk_postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
     _validate(titletupel, gfyear)
 
     root, period = titletupel
@@ -101,7 +101,7 @@ def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
     if type == EMAILTYPE_POSTFIX:
         postfix_ = str(period)[2:4]
     elif type == EMAILTYPE_PREFIX:
-        prefix_ = prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+        prefix_ = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
     return "" + prefix_ + root + postfix_
