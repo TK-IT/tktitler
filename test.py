@@ -2,7 +2,7 @@ import unittest
 from tktitler import (
     tk_prefix, ktk_prefix, tk_postfix,
     get_gfyear, override,
-    parse_relative,
+    parse_relative, parse,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
     POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH,
     POSTFIXTYPE_LONGSINGLE, POSTFIXTYPE_LONGSLASH,
@@ -273,6 +273,20 @@ class TestParseRelative(unittest.TestCase):
     def test_unknown(self):
         self.assertEqual(parse_relative('OABEN'),
                          (3, 'ABEN', None))
+
+
+class TestParse(unittest.TestCase):
+
+    def test_arg(self):
+        self.assertEqual(parse('FORM', 2016), ('FORM', 2016))
+
+    def test_context(self):
+        with override(2013):
+            self.assertEqual(parse('FORM'), ('FORM', 2013))
+
+    def test_postfix(self):
+        with override(2013):
+            self.assertEqual(parse('FORM16'), ('FORM', 2016))
 
 
 if __name__ == '__main__':
