@@ -149,8 +149,9 @@ def email(titletupel, gfyear=None, type=EMAILTYPE_POSTFIX):
     return prefix + root + postfix
 
 
-def parse(alias, gfyear=gfyear):
-    pass  # return (root, period)
+def parse(alias, gfyear=None):
+    gfyear = get_gfyear(gfyear)
+    # return (root, period)
 
 
 def _validate(titletupel, gfyear):
@@ -196,7 +197,7 @@ def _multireplace(string, replacements):
     return regexp.sub(lambda match: replacements[match.group(0)], string)
 
 
-def get_period(prefix, postfix, gfyear):
+def get_period(prefix, postfix, gfyear=None):
     """
     Parse a given prefix and postfix into a period.
     prefix and postfix are possibly empty strings,
@@ -224,6 +225,8 @@ def get_period(prefix, postfix, gfyear):
     >>> get_period("O", "2016", 2030)
     2013
     """
+
+    gfyear = get_gfyear(gfyear)
 
     prefix = prefix.upper()
     if not re.match(r'^([KGBOT][0-9]*)*$', prefix):
@@ -273,7 +276,7 @@ def get_period(prefix, postfix, gfyear):
     return period - grad
 
 
-def parse_bestfu_alias(alias, gfyear):
+def parse_bestfu_alias(alias, gfyear=None):
     """
     Resolve a BEST/FU alias into a (kind, root, period)-tuple
     where kind is 'BEST', 'FU' or 'EFU',
@@ -282,6 +285,8 @@ def parse_bestfu_alias(alias, gfyear):
     >>> parse_bestfu_alias('OFORM', 2016)
     ('BEST', 'FORM', 2013)
     """
+
+    gfyear = get_gfyear(gfyear)
 
     alias = alias.upper()
     prefix_pattern = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
