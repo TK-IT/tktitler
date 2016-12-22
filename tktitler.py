@@ -80,6 +80,7 @@ def tk_postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
+    assert isinstance(root + postfix, str)
     return "" + root + postfix
 
 
@@ -104,6 +105,7 @@ def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
         prefix = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
+    assert isinstance(prefix + root + postfix, str)
     return "" + prefix + root + postfix
 
 
