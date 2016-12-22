@@ -81,7 +81,7 @@ def tk_postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
     assert isinstance(root + postfix, str)
-    return "" + root + postfix
+    return root + postfix
 
 
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
@@ -106,7 +106,7 @@ def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
     assert isinstance(prefix + root + postfix, str)
-    return "" + prefix + root + postfix
+    return prefix + root + postfix
 
 
 def parse(alias, gfyear=gfyear):
