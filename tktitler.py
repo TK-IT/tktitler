@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import re
 import functools
+import unicodedata
 
 
 gfyear = 2016
@@ -149,9 +150,88 @@ def email(titletupel, gfyear=None, type=EMAILTYPE_POSTFIX):
     return prefix + root + postfix
 
 
+def normalize(input_alias):
+    table = {'$': 'S',
+             '\N{POUND SIGN}': 'S',
+             '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}
+
+    def tr(c):
+        try:
+            return table[c]
+        except KeyError:
+            try:
+                return str(unicodedata.digit(c))
+            except ValueError:
+                return c
+
+    s = input_alias.upper()
+    return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
+
+
+def parse_prefix(prefix):
+    pattern = r"^([KGBOT][KGBOT0-9]*)?$"
+    if not re.match(pattern, prefix):
+        raise ValueError(prefix)
+    prefix_value = dict(K=-1, G=1, B=2, O=3, T=1)
+    factors = []
+    for base, exponent in re.findall(r"([KGBOT])([0-9]*)", prefix):
+        factors.append(int(exponent or 1) * prefix_value[base])
+    return sum(factors)
+
+
+def parse_postfix(postfix):
+    if not isinstance(postfix, str):
+        raise TypeError(type(postfix))
+    if not postfix:
+        return
+    if len(postfix) == 2:
+        v = int(postfix)
+        return 2000 + v if v < 56 else 1900 + v
+    elif len(postfix) == 4:
+        first, second = int(postfix[0:2]), int(postfix[2:4])
+        # Note that postfix 1920, 2021 and 2122 are technically ambiguous,
+        # but luckily there was no BEST in 1920 and this script hopefully
+        # won't live until the year 2122, so they are not actually
+        # ambiguous.
+        if postfix == '2021':
+            # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
+            raise NotImplementedError(postfix)
+        if (first + 1) % 100 == second:
+            # There should be exactly one year between the two numbers
+            return 2000 + first if first < 56 else 1900 + first
+        elif first in (19, 20):
+            # 19xx or 20xx
+            return int(postfix)
+        else:
+            raise ValueError(postfix)
+    else:
+        # Length is neither 2 nor 4
+        raise ValueError(postfix)
+
+
+def parse_relative(input_alias):
+    alias = normalize(input_alias)
+    prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
+    postfix = r"(?P<post>[0-9]*)"
+    letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
+    known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
+             'E?FU(?:%s){2}|' % letter +
+             'BEST|FU')
+    known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
+    any_pattern = '^%s(?P<root>.*)%s' % (prefix, postfix)
+    mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
+    assert mo is not None
+    pre, root, post = mo.group('pre', 'root', 'post')
+    assert alias == pre + root + post
+    age = parse_prefix(pre)
+    gfyear = parse_postfix(post)
+    return age, root, gfyear
+
+
 def parse(alias, gfyear=None):
-    gfyear = get_gfyear(gfyear)
-    # return (root, period)
+    age, root, postfix = parse_relative(alias)
+    gfyear = postfix or get_gfyear(gfyear)
+    return root, gfyear - age
 
 
 def _validate(titletupel, gfyear):
