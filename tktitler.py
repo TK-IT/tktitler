@@ -157,6 +157,7 @@ def _multireplace(string, replacements):
     # For each match, look up the new string in the replacements
     return regexp.sub(lambda match: replacements[match.group(0)], string)
 
+
 def get_period(prefix, postfix, gfyear):
     """
     Parse a given prefix and postfix into a period.
