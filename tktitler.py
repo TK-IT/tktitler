@@ -51,8 +51,8 @@ def override(gfyear):
     return _Override(gfyear)
 
 
-def tk_prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
-    _validate(titletupel, gfyear)
+def tk_prefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
+    gfyear = _validate(titletupel, gfyear)
 
     root, period = titletupel
     root = _funny_substitute(root)
@@ -99,8 +99,8 @@ POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
-def tk_postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
-    _validate(titletupel, gfyear)
+def tk_postfix(titletupel, gfyear=None, type=POSTFIXTYPE_SINGLE):
+    gfyear = _validate(titletupel, gfyear)
 
     root, period = titletupel
     root = _funny_substitute(root)
@@ -128,8 +128,8 @@ EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
 EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
-def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
-    _validate(titletupel, gfyear)
+def email(titletupel, gfyear=None, type=EMAILTYPE_POSTFIX):
+    gfyear = _validate(titletupel, gfyear)
 
     root, period = titletupel
 
