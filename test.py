@@ -1,6 +1,7 @@
 import unittest
 from tktitler import (
     tk_prefix, ktk_prefix, tk_postfix,
+    get_gfyear, override,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
     POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH,
     POSTFIXTYPE_LONGSINGLE, POSTFIXTYPE_LONGSLASH,
@@ -191,6 +192,35 @@ class TestPostfix(unittest.TestCase):
         self.assertEqual(
             tk_postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSLASH),
             "CERM2016/2017")
+
+
+class TestOverride(unittest.TestCase):
+
+    def test_decorator(self):
+        self.assertEqual(override(2013)(get_gfyear)(), 2013)
+
+    def test_context_manager(self):
+        with override(2012):
+            self.assertEqual(get_gfyear(), 2012)
+
+    def test_reentrant(self):
+        with override(2011):
+            self.assertEqual(get_gfyear(), 2011)
+            with override(2012):
+                self.assertEqual(get_gfyear(), 2012)
+            self.assertEqual(get_gfyear(), 2011)
+
+    def test_prefix(self):
+        with override(2015):
+            self.assertEqual(tk_prefix(('CERM', 2014)), 'GCERM')
+
+    def test_kprefix(self):
+        with override(2015):
+            self.assertEqual(ktk_prefix(('CERM', 2014)), 'KOCERM')
+
+    def test_postfix(self):
+        with override(2015):
+            self.assertEqual(tk_postfix(('CERM', 2014)), 'CERM14')
 
 
 if __name__ == '__main__':
