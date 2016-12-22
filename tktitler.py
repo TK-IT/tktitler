@@ -12,10 +12,10 @@ PREFIXTYPE_UNICODE = "unicode"
 
 
 def prefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
-    __validate(titletupel, gfyear)
+    _validate(titletupel, gfyear)
 
     root, period = titletupel
-    root = __funny_substitute(root)
+    root = _funny_substitute(root)
     age = gfyear - period
 
     def identity(n):
@@ -60,10 +60,10 @@ POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
 def postfix(titletupel, gfyear=gfyear, type=POSTFIXTYPE_SINGLE):
-    __validate(titletupel, gfyear)
+    _validate(titletupel, gfyear)
 
     root, period = titletupel
-    root = __funny_substitute(root)
+    root = _funny_substitute(root)
 
     postfix = ""
 
@@ -88,13 +88,13 @@ EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
 def email(titletupel, gfyear=gfyear, type=EMAILTYPE_POSTFIX):
-    __validate(titletupel, gfyear)
+    _validate(titletupel, gfyear)
 
     root, period = titletupel
 
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
-    root = __multireplace(root, replace_dict)
+    root = _multireplace(root, replace_dict)
 
     prefix_ = ""
     postfix_ = ""
@@ -111,7 +111,7 @@ def parse(alias, gfyear=gfyear):
     pass  # return (root, period)
 
 
-def __validate(titletupel, gfyear):
+def _validate(titletupel, gfyear):
     root, period = titletupel
     if not isinstance(root, str):
         raise TypeError(
@@ -128,13 +128,13 @@ def __validate(titletupel, gfyear):
         raise ValueError("\'%s\' is not a valid gfyear" % gfyear)
 
 
-def __funny_substitute(root):
+def _funny_substitute(root):
     replace_dict = {'KASS': 'KA$$'}
-    root = __multireplace(root, replace_dict)
+    root = _multireplace(root, replace_dict)
     return root
 
 
-def __multireplace(string, replacements):
+def _multireplace(string, replacements):
     """
     Given a string and a replacement map, it returns the replaced string.
     :param str string: string to execute replacements on
