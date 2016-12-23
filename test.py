@@ -1,3 +1,7 @@
+# encoding: utf8
+from __future__ import unicode_literals
+
+import six
 import unittest
 from tktitler import (
     tk_prefix, tk_kprefix, tk_postfix,
@@ -82,23 +86,23 @@ class TestPrefixNormal(unittest.TestCase):
             "T12OCERM")
 
     def test_validation_root_int(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "int is not a valid type for root."):
+        with six.assertRaisesRegex(self, TypeError,
+                                   "int is not a valid type for root."):
             tk_prefix((0, 2012), 2016)
 
     def test_validation_period_float(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "float is not a valid type for period."):
+        with six.assertRaisesRegex(self, TypeError,
+                                   "float is not a valid type for period."):
             tk_prefix(("CERM", 2012.), 2016)
 
     def test_validation_period_string(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "str is not a valid type for period."):
+        with six.assertRaisesRegex(self, TypeError,
+                                   ".* is not a valid type for period."):
             tk_prefix(("CERM", '2012'), 2016)
 
     def test_validation_gfyear_string(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "str is not a valid type for gfyear."):
+        with six.assertRaisesRegex(self, TypeError,
+                                   ".* is not a valid type for gfyear."):
             tk_prefix(("CERM", 2012), "2016")
 
 

@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import re
+import six
 import functools
 import unicodedata
 
@@ -123,8 +124,8 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
-    assert isinstance(root + postfix, str)
-    return root + postfix
+    assert isinstance(root + postfix, six.string_types)
+    return six.text_type(root + postfix)
 
 
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
@@ -148,8 +149,8 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
         prefix = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
-    assert isinstance(prefix + root + postfix, str)
-    return prefix + root + postfix
+    assert isinstance(prefix + root + postfix, six.string_types)
+    return six.text_type(prefix + root + postfix)
 
 
 def _normalize(input_alias):
@@ -182,7 +183,7 @@ def _parse_prefix(prefix):
 
 
 def _parse_postfix(postfix):
-    if not isinstance(postfix, str):
+    if not isinstance(postfix, six.string_types):
         raise TypeError(type(postfix))
     if not postfix:
         return
@@ -238,7 +239,7 @@ def parse(alias, gfyear=None):
 
 def _validate_title(title):
     root, period = title
-    if not isinstance(root, str):
+    if not isinstance(root, six.text_type):
         raise TypeError(
             "%s is not a valid type for root." % type(root).__name__)
     if not isinstance(period, int):
