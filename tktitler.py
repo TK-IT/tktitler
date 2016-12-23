@@ -105,8 +105,8 @@ POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
-def tk_postfix(titletupel, gfyear=None, type=POSTFIXTYPE_SINGLE):
-    gfyear = _validate(titletupel, gfyear)
+def tk_postfix(titletupel, type=POSTFIXTYPE_SINGLE):
+    _validate_title(titletupel)
 
     root, period = titletupel
     root = _funny_substitute(root)
