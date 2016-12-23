@@ -1,5 +1,5 @@
 # encoding: utf8
-from __future__ import unicode_literals
+from __future__ import unicode_literals, print_function
 
 import re
 import six
@@ -326,8 +326,8 @@ def parse_bestfu_alias(alias, gfyear=None):
     where kind is 'BEST', 'FU' or 'EFU',
     root is the actual title, and period is which period the title
     refers to.
-    >>> parse_bestfu_alias('OFORM', 2016)
-    ('BEST', 'FORM', 2013)
+    >>> print(*parse_bestfu_alias('OFORM', 2016))
+    BEST FORM 2013
     """
 
     root, period = parse(alias, gfyear)
