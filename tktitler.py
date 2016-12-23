@@ -288,6 +288,7 @@ def get_period(prefix, postfix, gfyear=None):
     If both strings are empty, the gfyear is returned:
     >>> get_period("", "", 2016)
     2016
+
     If only a prefix is given, it is subtracted from the gfyear:
     >>> get_period("B", "", 2016)
     2014
@@ -295,6 +296,7 @@ def get_period(prefix, postfix, gfyear=None):
     2010
     >>> get_period("G2B2", "", 2016)
     2010
+
     These are the three different ways of writing 2010 as postfix.
     Note that the gfyear is ignored when postfix is given.
     >>> get_period("", "2010", 2016)
@@ -303,6 +305,7 @@ def get_period(prefix, postfix, gfyear=None):
     2010
     >>> get_period("", "1011", 2018)
     2010
+
     If both prefix and postfix are given, the prefix is subtracted from
     the postfix, and the gfyear is ignored:
     >>> get_period("O", "2016", 2030)
