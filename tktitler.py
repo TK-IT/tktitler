@@ -6,7 +6,7 @@ import functools
 import unicodedata
 
 
-_gfyear = 2016
+_gfyear = _GFYEAR_UNSET = object()
 
 
 PREFIXTYPE_NORMAL = "normal"
@@ -18,6 +18,9 @@ def get_gfyear(argument_gfyear=None):
         r = _gfyear
     else:
         r = argument_gfyear
+    if r is _GFYEAR_UNSET:
+        raise ValueError("No context gfyear set. Use the gfyear argument " +
+                         "or set_gfyear.")
     if not isinstance(r, int):
         raise TypeError(
             "%s is not a valid type for gfyear." % type(r).__name__)
