@@ -239,7 +239,7 @@ def parse(alias, gfyear=None):
     return root, gfyear - age
 
 
-def _validate(titletupel, gfyear):
+def _validate_title(titletuple):
     root, period = titletupel
     if not isinstance(root, str):
         raise TypeError(
@@ -249,6 +249,10 @@ def _validate(titletupel, gfyear):
             "%s is not a valid type for period." % type(period).__name__)
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
+
+
+def _validate(titletupel, gfyear):
+    _validate_title(titletuple)
     return get_gfyear(gfyear)
 
 
