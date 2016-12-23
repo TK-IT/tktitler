@@ -55,10 +55,10 @@ def set_gfyear(gfyear):
     return _Override(gfyear)
 
 
-def tk_prefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
-    gfyear = _validate(titletupel, gfyear)
+def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+    gfyear = _validate(title, gfyear)
 
-    root, period = titletupel
+    root, period = title
     root = _funny_substitute(root)
     age = gfyear - period
 
@@ -86,10 +86,10 @@ def tk_prefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
         return 'T%sO%s' % (sup_fn(age - 3), root)
 
 
-def tk_kprefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
-    gfyear = _validate(titletupel, gfyear)
+def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+    gfyear = _validate(title, gfyear)
 
-    root, period = titletupel
+    root, period = title
     age = gfyear - period
     if age <= -1:
         return tk_prefix((root, period), gfyear, type)
@@ -105,10 +105,10 @@ POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 
-def tk_postfix(titletupel, type=POSTFIXTYPE_SINGLE):
-    _validate_title(titletupel)
+def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
+    _validate_title(title)
 
-    root, period = titletupel
+    root, period = title
     root = _funny_substitute(root)
 
     postfix = ""
@@ -134,10 +134,10 @@ EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
 EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
-def email(titletupel, gfyear=None, type=EMAILTYPE_POSTFIX):
-    gfyear = _validate(titletupel, gfyear)
+def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
+    gfyear = _validate(title, gfyear)
 
-    root, period = titletupel
+    root, period = title
 
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
@@ -239,8 +239,8 @@ def parse(alias, gfyear=None):
     return root, gfyear - age
 
 
-def _validate_title(titletupel):
-    root, period = titletupel
+def _validate_title(title):
+    root, period = title
     if not isinstance(root, str):
         raise TypeError(
             "%s is not a valid type for root." % type(root).__name__)
@@ -251,8 +251,8 @@ def _validate_title(titletupel):
         raise ValueError("\'%s\' is not a valid period" % period)
 
 
-def _validate(titletupel, gfyear):
-    _validate_title(titletupel)
+def _validate(title, gfyear):
+    _validate_title(title)
     return get_gfyear(gfyear)
 
 
