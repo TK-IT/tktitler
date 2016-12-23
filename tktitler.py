@@ -220,7 +220,7 @@ def parse_relative(input_alias):
              'E?FU(?:%s){2}|' % letter +
              'BEST|FU')
     known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
-    any_pattern = '^%s(?P<root>.*)%s' % (prefix, postfix)
+    any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
     mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
     assert mo is not None
     pre, root, post = mo.group('pre', 'root', 'post')
