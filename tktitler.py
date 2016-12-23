@@ -168,7 +168,7 @@ def _normalize(input_alias):
     return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
 
 
-def parse_prefix(prefix):
+def _parse_prefix(prefix):
     pattern = r"^([KGBOT][KGBOT0-9]*)?$"
     if not re.match(pattern, prefix):
         raise ValueError(prefix)
@@ -223,7 +223,7 @@ def parse_relative(input_alias):
     assert mo is not None
     pre, root, post = mo.group('pre', 'root', 'post')
     assert alias == pre + root + post
-    age = parse_prefix(pre)
+    age = _parse_prefix(pre)
     gfyear = _parse_postfix(post)
     return age, root, gfyear
 
