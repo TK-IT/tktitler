@@ -6,7 +6,7 @@ import functools
 import unicodedata
 
 
-gfyear = 2016
+_gfyear = 2016
 
 
 PREFIXTYPE_NORMAL = "normal"
@@ -15,7 +15,7 @@ PREFIXTYPE_UNICODE = "unicode"
 
 def get_gfyear(argument_gfyear=None):
     if argument_gfyear is None:
-        r = gfyear
+        r = _gfyear
     else:
         r = argument_gfyear
     if not isinstance(r, int):
@@ -31,13 +31,13 @@ class _Override(object):
         self.context_gfyear = context_gfyear
 
     def __enter__(self):
-        global gfyear
-        self.prev_gfyear = gfyear
-        gfyear = self.context_gfyear
+        global _gfyear
+        self.prev_gfyear = _gfyear
+        _gfyear = self.context_gfyear
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
-        global gfyear
-        gfyear = self.prev_gfyear
+        global _gfyear
+        _gfyear = self.prev_gfyear
 
     def __call__(self, fun):
         @functools.wraps(fun)
