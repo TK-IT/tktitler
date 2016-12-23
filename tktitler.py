@@ -239,7 +239,7 @@ def parse(alias, gfyear=None):
     return root, gfyear - age
 
 
-def _validate_title(titletuple):
+def _validate_title(titletupel):
     root, period = titletupel
     if not isinstance(root, str):
         raise TypeError(
@@ -252,7 +252,7 @@ def _validate_title(titletuple):
 
 
 def _validate(titletupel, gfyear):
-    _validate_title(titletuple)
+    _validate_title(titletupel)
     return get_gfyear(gfyear)
 
 
