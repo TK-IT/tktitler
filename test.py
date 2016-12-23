@@ -217,7 +217,7 @@ class TestOverride(unittest.TestCase):
 
     def test_kprefix(self):
         with set_gfyear(2015):
-            self.assertEqual(tk_kprefix(('CERM', 2014)), 'KOCERM')
+            self.assertEqual(tk_kprefix(('CERM', 2014)), 'KBCERM')
 
     def test_postfix(self):
         with set_gfyear(2015):
