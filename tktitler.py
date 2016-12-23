@@ -292,7 +292,7 @@ def get_period(prefix, postfix, gfyear=None):
     If only a prefix is given, it is subtracted from the gfyear:
     >>> get_period("B", "", 2016)
     2014
-    >>> get_period("T30", "", 2016)
+    >>> get_period("T3O", "", 2016)
     2010
     >>> get_period("G2B2", "", 2016)
     2010
