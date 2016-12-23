@@ -1,6 +1,6 @@
 import unittest
 from tktitler import (
-    tk_prefix, ktk_prefix, tk_postfix,
+    tk_prefix, tk_kprefix, tk_postfix,
     get_gfyear, override,
     parse_relative, parse,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
@@ -144,26 +144,26 @@ class TestPrefixUnicode(unittest.TestCase):
 class TestKprefix(unittest.TestCase):
 
     def test_sameyear(self):
-        self.assertEqual(ktk_prefix(("CERM", 2016), 2016), "KGCERM")
+        self.assertEqual(tk_kprefix(("CERM", 2016), 2016), "KGCERM")
 
     def test_year_minus_01(self):
-        self.assertEqual(ktk_prefix(("CERM", 2015), 2016), "KBCERM")
+        self.assertEqual(tk_kprefix(("CERM", 2015), 2016), "KBCERM")
 
     def test_year_minus_04(self):
-        self.assertEqual(ktk_prefix(("CERM", 2012), 2016), "KT2OCERM")
+        self.assertEqual(tk_kprefix(("CERM", 2012), 2016), "KT2OCERM")
 
     def test_year_minus_05(self):
-        self.assertEqual(ktk_prefix(("CERM", 2011), 2016), "KT3OCERM")
+        self.assertEqual(tk_kprefix(("CERM", 2011), 2016), "KT3OCERM")
 
     def test_year_plus_1(self):
-        self.assertEqual(ktk_prefix(("CERM", 2017), 2016), "KCERM")
+        self.assertEqual(tk_kprefix(("CERM", 2017), 2016), "KCERM")
 
     def test_year_plus_2(self):
-        self.assertEqual(ktk_prefix(("CERM", 2018), 2016), "K2CERM")
+        self.assertEqual(tk_kprefix(("CERM", 2018), 2016), "K2CERM")
 
     def test_unicode_year_minus_05(self):
         self.assertEqual(
-            ktk_prefix(("CERM", 2011), 2016, type=PREFIXTYPE_UNICODE),
+            tk_kprefix(("CERM", 2011), 2016, type=PREFIXTYPE_UNICODE),
             "KT³OCERM")
 
 
@@ -217,7 +217,7 @@ class TestOverride(unittest.TestCase):
 
     def test_kprefix(self):
         with override(2015):
-            self.assertEqual(ktk_prefix(('CERM', 2014)), 'KOCERM')
+            self.assertEqual(tk_kprefix(('CERM', 2014)), 'KOCERM')
 
     def test_postfix(self):
         with override(2015):
