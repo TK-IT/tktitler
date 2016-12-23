@@ -86,7 +86,9 @@ def tk_prefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
         return 'T%sO%s' % (sup_fn(age - 3), root)
 
 
-def tk_kprefix(titletupel, gfyear=gfyear, type=PREFIXTYPE_NORMAL):
+def tk_kprefix(titletupel, gfyear=None, type=PREFIXTYPE_NORMAL):
+    gfyear = _validate(titletupel, gfyear)
+
     root, period = titletupel
     age = gfyear - period
     if age <= -1:
