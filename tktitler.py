@@ -179,7 +179,7 @@ def parse_prefix(prefix):
     return sum(factors)
 
 
-def parse_postfix(postfix):
+def _parse_postfix(postfix):
     if not isinstance(postfix, str):
         raise TypeError(type(postfix))
     if not postfix:
@@ -224,7 +224,7 @@ def parse_relative(input_alias):
     pre, root, post = mo.group('pre', 'root', 'post')
     assert alias == pre + root + post
     age = parse_prefix(pre)
-    gfyear = parse_postfix(post)
+    gfyear = _parse_postfix(post)
     return age, root, gfyear
 
 
