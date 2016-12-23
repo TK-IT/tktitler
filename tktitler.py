@@ -314,54 +314,8 @@ def get_period(prefix, postfix, gfyear=None):
     2013
     """
 
-    gfyear = get_gfyear(gfyear)
-
-    prefix = prefix.upper()
-    if not re.match(r'^([KGBOT][0-9]*)*$', prefix):
-        raise ValueError("Invalid prefix: %r" % prefix)
-    if not re.match(r'^([0-9]{2}){0,2}$', postfix):
-        raise ValueError("Invalid postfix: %r" % postfix)
-
-    if not postfix:
-        period = gfyear
-    else:
-        if len(postfix) == 4:
-            first, second = int(postfix[0:2]), int(postfix[2:4])
-            # Note that postfix 1920, 2021 and 2122 are technically ambiguous,
-            # but luckily there was no BEST in 1920 and this script hopefully
-            # won't live until the year 2122, so they are not actually
-            # ambiguous.
-            if postfix == '2021':
-                # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
-                raise NotImplementedError(postfix)
-            if (first + 1) % 100 == second:
-                # There should be exactly one year between the two numbers
-                if first > 56:
-                    period = 1900 + first
-                else:
-                    period = 2000 + first
-            elif first in (19, 20):
-                # 19xx or 20xx
-                period = int(postfix)
-            else:
-                raise ValueError(postfix)
-        elif len(postfix) == 2:
-            year = int(postfix[0:2])
-            if year > 56:  # 19??
-                period = 1900 + year
-            else:  # 20??
-                period = 2000 + year
-        else:
-            raise ValueError(postfix)
-
-    # Now evaluate the prefix:
-    prefix_value = dict(K=-1, G=1, B=2, O=3, T=1)
-    grad = 0
-    for base, exponent in re.findall(r"([KGBOT])([0-9]*)", prefix):
-        exponent = int(exponent or 1)
-        grad += prefix_value[base] * exponent
-
-    return period - grad
+    root, period = parse('%sFORM%s' % (prefix, postfix), gfyear)
+    return period
 
 
 def parse_bestfu_alias(alias, gfyear=None):
@@ -374,33 +328,14 @@ def parse_bestfu_alias(alias, gfyear=None):
     ('BEST', 'FORM', 2013)
     """
 
-    gfyear = get_gfyear(gfyear)
-
-    alias = alias.upper()
-    prefix_pattern = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
-    postfix_pattern = r"(?P<post>(?:[0-9]{2}|[0-9]{4})?)"
-    letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
-    letter_map = dict(AE='Æ', OE='Ø', AA='Å')
+    root, period = parse(alias, gfyear)
+    letter = '(?:[A-Z]|Æ|Ø|Å|AE|OE|AA)'
     title_patterns = [
-        ('BEST', 'CERM|FORM|INKA|KASS|NF|PR|SEKR|VC'),
-        ('FU', '(?P<a>E?FU)(?P<b>%s)(?P<c>%s)' % (letter, letter)),
+        ('BEST', '^(?:CERM|FORM|INKA|KASS|NF|PR|SEKR|VC)$'),
+        ('FU', '^FU%s%s$' % (letter, letter)),
+        ('EFU', '^EFU%s%s$' % (letter, letter)),
     ]
     for kind, p in title_patterns:
-        pattern = '^%s(?P<root>%s)%s$' % (prefix_pattern, p, postfix_pattern)
-        mo = re.match(pattern, alias)
-        if mo is not None:
-            period = get_period(mo.group("pre"), mo.group("post"), gfyear)
-            root = mo.group('root')
-            if kind == 'FU':
-                fu_kind = mo.group('a')
-                letter1 = mo.group('b')
-                letter2 = mo.group('c')
-                assert root == fu_kind + letter1 + letter2
-                # Translate AE OE AA
-                letter1_int = letter_map.get(letter1, letter1)
-                letter2_int = letter_map.get(letter2, letter2)
-                root_int = fu_kind + letter1_int + letter2_int
-                return fu_kind, root_int, period
-            else:
-                return kind, root, period
+        if re.match(p, root):
+            return kind, root, period
     raise ValueError(alias)
