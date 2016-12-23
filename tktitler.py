@@ -83,19 +83,16 @@ def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     elif age + 1 < len(prefix):
         return prefix[age + 1] + root
     else:
-        return 'T%sO%s' % (sup_fn(age - 3), root)
+        return 'T%sO' % sup_fn(age - 3) + root
 
 
 def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     gfyear = _validate(title, gfyear)
 
     root, period = title
-    age = gfyear - period
-    if age <= -1:
+    if gfyear < period:
         return tk_prefix((root, period), gfyear, type)
-
-    period -= 1
-    return "K" + tk_prefix((root, period), gfyear, type)
+    return "K" + tk_prefix((root, period - 1), gfyear, type)
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
