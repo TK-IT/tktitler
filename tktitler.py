@@ -48,7 +48,7 @@ class _Override(object):
         return wrapped
 
 
-def override(gfyear):
+def set_gfyear(gfyear):
     return _Override(gfyear)
 
 

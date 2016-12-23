@@ -1,7 +1,7 @@
 import unittest
 from tktitler import (
     tk_prefix, tk_kprefix, tk_postfix,
-    get_gfyear, override,
+    get_gfyear, set_gfyear,
     parse_relative, parse,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
     POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH,
@@ -198,29 +198,29 @@ class TestPostfix(unittest.TestCase):
 class TestOverride(unittest.TestCase):
 
     def test_decorator(self):
-        self.assertEqual(override(2013)(get_gfyear)(), 2013)
+        self.assertEqual(set_gfyear(2013)(get_gfyear)(), 2013)
 
     def test_context_manager(self):
-        with override(2012):
+        with set_gfyear(2012):
             self.assertEqual(get_gfyear(), 2012)
 
     def test_reentrant(self):
-        with override(2011):
+        with set_gfyear(2011):
             self.assertEqual(get_gfyear(), 2011)
-            with override(2012):
+            with set_gfyear(2012):
                 self.assertEqual(get_gfyear(), 2012)
             self.assertEqual(get_gfyear(), 2011)
 
     def test_prefix(self):
-        with override(2015):
+        with set_gfyear(2015):
             self.assertEqual(tk_prefix(('CERM', 2014)), 'GCERM')
 
     def test_kprefix(self):
-        with override(2015):
+        with set_gfyear(2015):
             self.assertEqual(tk_kprefix(('CERM', 2014)), 'KOCERM')
 
     def test_postfix(self):
-        with override(2015):
+        with set_gfyear(2015):
             self.assertEqual(tk_postfix(('CERM', 2014)), 'CERM14')
 
 
@@ -281,11 +281,11 @@ class TestParse(unittest.TestCase):
         self.assertEqual(parse('FORM', 2016), ('FORM', 2016))
 
     def test_context(self):
-        with override(2013):
+        with set_gfyear(2013):
             self.assertEqual(parse('FORM'), ('FORM', 2013))
 
     def test_postfix(self):
-        with override(2013):
+        with set_gfyear(2013):
             self.assertEqual(parse('FORM16'), ('FORM', 2016))
 
 
