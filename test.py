@@ -274,6 +274,12 @@ class TestParseRelative(unittest.TestCase):
         self.assertEqual(parse_relative('OABEN'),
                          (3, 'ABEN', None))
 
+    def test_prefix(self):
+        self.assertEqual(parse_relative('G12'), (12, '', None))
+
+    def test_postfix(self):
+        self.assertEqual(parse_relative('12'), (0, '', 2012))
+
 
 class TestParse(unittest.TestCase):
 
