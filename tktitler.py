@@ -150,7 +150,7 @@ def email(titletupel, gfyear=None, type=EMAILTYPE_POSTFIX):
     return prefix + root + postfix
 
 
-def normalize(input_alias):
+def _normalize(input_alias):
     table = {'$': 'S',
              '\N{POUND SIGN}': 'S',
              '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}
@@ -210,7 +210,7 @@ def parse_postfix(postfix):
 
 
 def parse_relative(input_alias):
-    alias = normalize(input_alias)
+    alias = _normalize(input_alias)
     prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
     postfix = r"(?P<post>[0-9]*)"
     letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
