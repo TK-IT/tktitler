@@ -200,7 +200,24 @@ class _Prefix:
 
 
 class _Postfix:
+    SHORT_TYPES = (POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH)
+    LONG_TYPES = (POSTFIXTYPE_LONGSINGLE, POSTFIXTYPE_LONGSLASH)
+    TYPES = SHORT_TYPES + LONG_TYPES
+
     def __init__(self, period, kind):
+        if not isinstance(period, int):
+            raise TypeError(type(period))
+        if not 1000 <= period < 10000:
+            raise ValueError(period)
+        if kind not in self.TYPES:
+            raise ValueError(kind)
+        if kind in self.SHORT_TYPES:
+            if not 1956 <= period < 2056:
+                raise ValueError(period)
+        if kind in [POSTFIXTYPE_LONGSINGLE]:
+            first, second = divmod(period, 100)
+            if (first + 1) % 100 == second:
+                raise ValueError(period)
         self.period = period
         self.kind = kind
 
