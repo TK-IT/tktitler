@@ -282,7 +282,7 @@ class _Title:
     def parse(cls, input_alias):
         alias = _normalize(input_alias)
         prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
-        postfix = r"(?P<post>[0-9]*)"
+        postfix = r"(?P<post>(?:[0-9][0-9/]*)?)"
         letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
         known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
                  'E?FU(?:%s){2}|' % letter +
