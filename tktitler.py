@@ -61,28 +61,7 @@ def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     root = _funny_substitute(root)
     age = gfyear - period
 
-    def identity(n):
-        return n
-
-    def unicode_superscript(n):
-        digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
-        return ''.join(digits[int(i)] for i in str(n))
-
-    sup_fn = None
-    if type == PREFIXTYPE_NORMAL:
-        sup_fn = identity
-    elif type == PREFIXTYPE_UNICODE:
-        sup_fn = unicode_superscript
-    else:
-        raise ValueError("\'%s\' is not a valid type-parameter" % type)
-
-    prefix = ['K', '', 'G', 'B', 'O', 'TO']
-    if age < -1:
-        return 'K%s' % sup_fn(-age) + root
-    elif age + 1 < len(prefix):
-        return prefix[age + 1] + root
-    else:
-        return 'T%sO' % sup_fn(age - 3) + root
+    return str(_Prefix.from_age(age, type)) + root
 
 
 def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
@@ -154,12 +133,12 @@ class _Prefix:
 
     @classmethod
     def from_age(cls, age, kind):
-        if -1 <= age <= 3:
+        if -1 <= age <= 4:
             prefix = ['K', '', 'G', 'B', 'O', 'TO']
             return cls.parse(prefix[age + 1])
         elif age < -1:
             return cls([('K', -age)], kind)
-        elif 3 < age:
+        elif 4 < age:
             return cls([('T', age - 3), ('O', None)], kind)
         else:
             raise ValueError(age)
