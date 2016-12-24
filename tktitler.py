@@ -221,9 +221,12 @@ class _Postfix:
             # won't live until the year 2122, so they are not actually
             # ambiguous.
             if postfix == '2021':
-                # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
-                raise NotImplementedError(postfix)
-            if (first + 1) % 100 == second:
+                # POSTFIXTYPE_LONGSINGLE is never used in email recipients,
+                # whereas POSTFIXTYPE_DOUBLE is used in 1/3 of the cases in
+                # which as postfix is given (with the remainder using
+                # POSTFIXTYPE_SINGLE).
+                return cls(2020, POSTFIXTYPE_DOUBLE)
+            elif (first + 1) % 100 == second:
                 # There should be exactly one year between the two numbers
                 period = 2000 + first if first < 56 else 1900 + first
                 return cls(period, POSTFIXTYPE_DOUBLE)
