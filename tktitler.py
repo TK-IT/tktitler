@@ -152,6 +152,18 @@ class _Prefix:
         self.data = [(self.VALUE[b.upper()] and b, e) for b, e in data]
         self.kind = kind
 
+    @classmethod
+    def from_age(cls, age, kind):
+        if -1 <= age <= 3:
+            prefix = ['K', '', 'G', 'B', 'O', 'TO']
+            return cls.parse(prefix[age + 1])
+        elif age < -1:
+            return cls([('K', -age)], kind)
+        elif 3 < age:
+            return cls([('T', age - 3), ('O', None)], kind)
+        else:
+            raise ValueError(age)
+
     def _ages(self):
         for base, exponent in self.data:
             e = 1 if exponent is None else exponent
