@@ -104,27 +104,9 @@ POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
 
 def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     _validate_title(title)
-
     root, period = title
-    root = _funny_substitute(root)
-
-    postfix = ""
-
-    if type == POSTFIXTYPE_SINGLE:
-        postfix = str(period)[2:4]
-    elif type == POSTFIXTYPE_DOUBLE:
-        postfix = str(period)[2:4] + str(period+1)[2:4]
-    elif type == POSTFIXTYPE_SLASH:
-        postfix = str(period)[2:4] + "/" + str(period+1)[2:4]
-    elif type == POSTFIXTYPE_LONGSINGLE:
-        postfix = str(period)
-    elif type == POSTFIXTYPE_LONGSLASH:
-        postfix = str(period) + "/" + str(period+1)
-    else:
-        raise ValueError("\'%s\' is not a valid type-parameter" % type)
-
-    assert isinstance(root + postfix, str)
-    return root + postfix
+    sep = ''
+    return '%s%s%s' % (_funny_substitute(root), sep, _Postfix(period, type))
 
 
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
