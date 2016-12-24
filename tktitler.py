@@ -170,64 +170,136 @@ def _normalize(input_alias):
     return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
 
 
-def _parse_prefix(prefix):
-    pattern = r"^([KGBOT][KGBOT0-9]*)?$"
-    if not re.match(pattern, prefix):
-        raise ValueError(prefix)
-    prefix_value = dict(K=-1, G=1, B=2, O=3, T=1)
-    factors = []
-    for base, exponent in re.findall(r"([KGBOT])([0-9]*)", prefix):
-        factors.append(int(exponent or 1) * prefix_value[base])
-    return sum(factors)
+class _Prefix:
+    VALUE = dict(K=-1, G=1, B=2, O=3, T=1)
+
+    def __init__(self, data):
+        self.data = [(self.VALUE[b] and b, e) for b, e in data]
+
+    def _ages(self):
+        for base, exponent in self.data:
+            e = 1 if exponent is None else exponent
+            yield e * self.VALUE[base]
+
+    def age(self):
+        return sum(self._ages())
+
+    @classmethod
+    def parse(cls, s):
+        if not re.match(r'^([KGBOT][KGBOT0-9]*)?$', s):
+            raise ValueError(s)
+        factors = re.findall(r'([KGBOT])([0-9]*)', s)
+        return cls([(b, int(e) if e else None)
+                    for b, e in factors])
+
+    def __str__(self):
+        return ''.join('%s%s' % (b, e or '') for b, e in self.data)
+
+    def __repr__(self):
+        return "_Prefix.parse('%s')" % self
 
 
-def _parse_postfix(postfix):
-    if not isinstance(postfix, str):
-        raise TypeError(type(postfix))
-    if not postfix:
-        return
-    if len(postfix) == 2:
-        v = int(postfix)
-        return 2000 + v if v < 56 else 1900 + v
-    elif len(postfix) == 4:
-        first, second = int(postfix[0:2]), int(postfix[2:4])
-        # Note that postfix 1920, 2021 and 2122 are technically ambiguous,
-        # but luckily there was no BEST in 1920 and this script hopefully
-        # won't live until the year 2122, so they are not actually
-        # ambiguous.
-        if postfix == '2021':
-            # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
-            raise NotImplementedError(postfix)
-        if (first + 1) % 100 == second:
-            # There should be exactly one year between the two numbers
-            return 2000 + first if first < 56 else 1900 + first
-        elif first in (19, 20):
-            # 19xx or 20xx
-            return int(postfix)
+class _Postfix:
+    def __init__(self, period, kind):
+        self.period = period
+        self.kind = kind
+
+    @classmethod
+    def parse(cls, postfix):
+        if not isinstance(postfix, str):
+            raise TypeError(type(postfix))
+        if not postfix:
+            raise ValueError(postfix)
+        if len(postfix) == 2:
+            v = int(postfix)
+            period = 2000 + v if v < 56 else 1900 + v
+            return cls(period, POSTFIXTYPE_SINGLE)
+        elif len(postfix) == 4:
+            first, second = int(postfix[0:2]), int(postfix[2:4])
+            # Note that postfix 1920, 2021 and 2122 are technically ambiguous,
+            # but luckily there was no BEST in 1920 and this script hopefully
+            # won't live until the year 2122, so they are not actually
+            # ambiguous.
+            if postfix == '2021':
+                # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
+                raise NotImplementedError(postfix)
+            if (first + 1) % 100 == second:
+                # There should be exactly one year between the two numbers
+                period = 2000 + first if first < 56 else 1900 + first
+                return cls(period, POSTFIXTYPE_DOUBLE)
+            elif first in (19, 20):
+                # 19xx or 20xx
+                return cls(int(postfix), POSTFIXTYPE_LONGSINGLE)
+            else:
+                raise ValueError(postfix)
+        elif '/' in postfix:
+            first, second = map(int, postfix.split('/'))
+            if len(postfix) == 5:
+                if (first + 1) % 100 != second:
+                    raise ValueError(postfix)
+                period = 2000 + first if first < 56 else 1900 + first
+                return cls(period, POSTFIXTYPE_SLASH)
+            elif len(postfix) == 9:
+                if not 1900 <= first < first + 1 == second < 2100:
+                    raise ValueError(postfix)
+                return cls(first, POSTFIXTYPE_LONGSLASH)
+            else:
+                raise ValueError(postfix)
         else:
             raise ValueError(postfix)
-    else:
-        # Length is neither 2 nor 4
-        raise ValueError(postfix)
+
+    def __str__(self):
+        if self.kind == POSTFIXTYPE_SINGLE:
+            return str(self.period)[2:4]
+        elif self.kind == POSTFIXTYPE_DOUBLE:
+            return str(self.period)[2:4] + str(self.period+1)[2:4]
+        elif self.kind == POSTFIXTYPE_SLASH:
+            return str(self.period)[2:4] + "/" + str(self.period+1)[2:4]
+        elif self.kind == POSTFIXTYPE_LONGSINGLE:
+            return str(self.period)
+        elif self.kind == POSTFIXTYPE_LONGSLASH:
+            return str(self.period) + "/" + str(self.period+1)
+        else:
+            raise ValueError("'%s' is not a valid type-parameter" % self.kind)
+
+
+class _Title:
+    def __init__(self, pre, root, post):
+        self.pre = pre
+        self.root = root
+        self.post = post
+
+    def __str__(self):
+        return '%s%s%s' % (self.pre, self.root, self.post or '')
+
+    def __repr__(self):
+        return "_Title.parse('%s')" % self
+
+    @classmethod
+    def parse(cls, input_alias):
+        alias = _normalize(input_alias)
+        prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
+        postfix = r"(?P<post>[0-9]*)"
+        letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
+        known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
+                 'E?FU(?:%s){2}|' % letter +
+                 'BEST|FU')
+        known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
+        any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
+        mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
+        if mo is None:
+            raise ValueError(alias)
+        pre, root, post = mo.group('pre', 'root', 'post')
+        postfix = _Postfix.parse(post) if post else None
+        return cls(_Prefix.parse(pre), root, postfix)
+
+    def __iter__(self):
+        return iter((self.pre, self.root, self.post))
 
 
 def parse_relative(input_alias):
-    alias = _normalize(input_alias)
-    prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
-    postfix = r"(?P<post>[0-9]*)"
-    letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
-    known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
-             'E?FU(?:%s){2}|' % letter +
-             'BEST|FU')
-    known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
-    any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
-    mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
-    assert mo is not None
-    pre, root, post = mo.group('pre', 'root', 'post')
-    assert alias == pre + root + post
-    age = _parse_prefix(pre)
-    gfyear = _parse_postfix(post)
-    return age, root, gfyear
+    pre, root, post = _Title.parse(input_alias)
+    return pre.age(), root, post.period if post else None
 
 
 def parse(alias, gfyear=None):
