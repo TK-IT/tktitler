@@ -267,14 +267,25 @@ class _Postfix:
 
 
 class _Title:
-    def __init__(self, pre, root, sep, post):
-        self.pre = pre
+    def __init__(self, pre=None, root='', sep=None, post=None):
+        if pre is None:
+            pre = _Prefix.parse('')
+        if not isinstance(pre, _Prefix):
+            raise TypeError(type(pre))
+        if not isinstance(root, str):
+            raise TypeError(type(root))
+        if sep is not None and not isinstance(sep, str):
+            raise TypeError(type(sep))
+        if post is not None and not isinstance(post, _Postfix):
+            raise TypeError(type(post))
+        self.pre = pre or _Prefix.parse('')
         self.root = root
         self.sep = sep
         self.post = post
 
     def __str__(self):
-        return '%s%s%s%s' % (self.pre, self.root, self.sep, self.post or '')
+        return ('%s%s%s%s' %
+                (self.pre, self.root, self.sep or '', self.post or ''))
 
     def __repr__(self):
         return '_Title.parse(%s)' % repr(str(self))
