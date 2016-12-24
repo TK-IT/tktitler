@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 
 import re
 import functools
-import unicodedata
 
 
 _gfyear = _GFYEAR_UNSET = object()
@@ -138,44 +137,61 @@ def _normalize(input_alias):
     table = {'$': 'S',
              '\N{POUND SIGN}': 'S',
              '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}
-
-    def tr(c):
-        try:
-            return table[c]
-        except KeyError:
-            try:
-                return str(unicodedata.digit(c))
-            except ValueError:
-                return c
-
-    s = input_alias.upper()
-    return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
+    return _multireplace(input_alias.upper(), table)
 
 
 class _Prefix:
     VALUE = dict(K=-1, G=1, B=2, O=3, T=1)
+    DIGITS = {
+        PREFIXTYPE_NORMAL: '0123456789',
+        PREFIXTYPE_UNICODE: '⁰¹²³⁴⁵⁶⁷⁸⁹',
+    }
+    PATTERN = r'(?:[KGBOT](?:[KGBOT0-9]*|[KGBOT⁰¹²³⁴⁵⁶⁷⁸⁹]*))?'
 
-    def __init__(self, data):
-        self.data = [(self.VALUE[b] and b, e) for b, e in data]
+    def __init__(self, data, kind):
+        self.data = [(self.VALUE[b.upper()] and b, e) for b, e in data]
+        self.kind = kind
 
     def _ages(self):
         for base, exponent in self.data:
             e = 1 if exponent is None else exponent
-            yield e * self.VALUE[base]
+            yield e * self.VALUE[base.upper()]
 
     def age(self):
         return sum(self._ages())
 
     @classmethod
+    def parse_exponent(cls, exponent, kind):
+        if exponent == '':
+            return None
+        digits = cls.DIGITS[kind]
+        return int(''.join(str(digits.index(c)) for c in exponent))
+
+    def display_exponent(self, exponent):
+        if exponent is None:
+            return ''
+        digits = self.DIGITS[self.kind]
+        return ''.join(digits[int(i)] for i in str(exponent))
+
+    @classmethod
     def parse(cls, s):
-        if not re.match(r'^([KGBOT][KGBOT0-9]*)?$', s):
-            raise ValueError(s)
-        factors = re.findall(r'([KGBOT])([0-9]*)', s)
-        return cls([(b, int(e) if e else None)
-                    for b, e in factors])
+        bases = ''.join(cls.VALUE.keys())
+        for kind in (PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE):
+            exponents = cls.DIGITS[kind]
+            pattern = r'(?i)([%s])([%s]*)' % (bases, exponents)
+            if not re.match(r'^(%s)*$' % pattern, s):
+                continue
+            it = re.finditer(pattern, s)
+            data = []
+            for mo in it:
+                base, exponent = mo.groups()
+                data.append((base, cls.parse_exponent(exponent, kind)))
+            return cls(data, kind)
+        raise ValueError(s)
 
     def __str__(self):
-        return ''.join('%s%s' % (b, e or '') for b, e in self.data)
+        return ''.join('%s%s' % (b, self.display_exponent(e))
+                       for b, e in self.data)
 
     def __repr__(self):
         return "_Prefix.parse('%s')" % self
@@ -290,23 +306,24 @@ class _Title:
         return '_Title.parse(%s)' % repr(str(self))
 
     @classmethod
-    def parse(cls, input_alias):
-        alias = _normalize(input_alias)
-        prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
+    def parse(cls, alias):
+        prefix = r"(?P<pre>%s)" % _Prefix.PATTERN
         postfix = r"(?P<sep>\W*)(?P<post>(?:[0-9][0-9/]*)?)"
         letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
-        known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
+        dollardollar = 2*'[S$\N{POUND SIGN}]'
+        c = '[C\N{DOUBLE-STRUCK CAPITAL C}]'
+        known = ('%sERM|FORM|INKA|KA%s|NF|PR|SEKR|V%s' % (c, dollardollar, c) +
                  'E?FU(?:%s){2}|' % letter +
                  'BEST|FU')
-        known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
-        any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
+        known_pattern = '(?i)^%s(?P<root>%s)%s$' % (prefix, known, postfix)
+        any_pattern = '(?i)^%s(?P<root>.*?)%s$' % (prefix, postfix)
         mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
         if mo is None:
             raise ValueError(alias)
         pre, root, sep, post = mo.group('pre', 'root', 'sep', 'post')
         postfix = _Postfix.parse(post) if post else None
         title = cls(_Prefix.parse(pre), root, sep, postfix)
-        assert str(title) == alias
+        assert str(title) == alias, (str(title), alias)
         return title
 
     def __iter__(self):
@@ -315,7 +332,7 @@ class _Title:
 
 def parse_relative(input_alias):
     pre, root, post = _Title.parse(input_alias)
-    return pre.age(), root, post.period if post else None
+    return pre.age(), _normalize(root), post.period if post else None
 
 
 def parse(alias, gfyear=None):
