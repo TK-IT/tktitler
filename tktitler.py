@@ -267,22 +267,23 @@ class _Postfix:
 
 
 class _Title:
-    def __init__(self, pre, root, post):
+    def __init__(self, pre, root, sep, post):
         self.pre = pre
         self.root = root
+        self.sep = sep
         self.post = post
 
     def __str__(self):
-        return '%s%s%s' % (self.pre, self.root, self.post or '')
+        return '%s%s%s%s' % (self.pre, self.root, self.sep, self.post or '')
 
     def __repr__(self):
-        return "_Title.parse('%s')" % self
+        return '_Title.parse(%s)' % repr(str(self))
 
     @classmethod
     def parse(cls, input_alias):
         alias = _normalize(input_alias)
         prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
-        postfix = r"(?P<post>(?:[0-9][0-9/]*)?)"
+        postfix = r"(?P<sep>\W*)(?P<post>(?:[0-9][0-9/]*)?)"
         letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
         known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
                  'E?FU(?:%s){2}|' % letter +
@@ -292,9 +293,9 @@ class _Title:
         mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
         if mo is None:
             raise ValueError(alias)
-        pre, root, post = mo.group('pre', 'root', 'post')
+        pre, root, sep, post = mo.group('pre', 'root', 'sep', 'post')
         postfix = _Postfix.parse(post) if post else None
-        title = cls(_Prefix.parse(pre), root, postfix)
+        title = cls(_Prefix.parse(pre), root, sep, postfix)
         assert str(title) == alias
         return title
 
