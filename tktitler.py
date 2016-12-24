@@ -294,7 +294,9 @@ class _Title:
             raise ValueError(alias)
         pre, root, post = mo.group('pre', 'root', 'post')
         postfix = _Postfix.parse(post) if post else None
-        return cls(_Prefix.parse(pre), root, postfix)
+        title = cls(_Prefix.parse(pre), root, postfix)
+        assert str(title) == alias
+        return title
 
     def __iter__(self):
         return iter((self.pre, self.root, self.post))
