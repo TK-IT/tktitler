@@ -218,7 +218,7 @@ def parse_relative(input_alias):
     letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
     known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
              'E?FU(?:%s){2}|' % letter +
-             'BEST|FU')
+             'BEST|FU|BESTFU')
     known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
     any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
     mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
