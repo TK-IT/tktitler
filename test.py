@@ -280,6 +280,9 @@ class TestParseRelative(unittest.TestCase):
     def test_postfix(self):
         self.assertEqual(parse_relative('12'), (0, '', 2012))
 
+    def test_bestfu(self):
+        self.assertEqual(parse_relative('BESTFU'), (0, 'BESTFU', None))
+
 
 class TestParse(unittest.TestCase):
 

@@ -305,7 +305,7 @@ class _Title:
         c = '[C\N{DOUBLE-STRUCK CAPITAL C}]'
         known = ('%sERM|FORM|INKA|KA%s|NF|PR|SEKR|V%s' % (c, dollardollar, c) +
                  'E?FU(?:%s){2}|' % letter +
-                 'BEST|FU')
+                 'BEST|FU|BESTFU')
         known_pattern = '(?i)^%s(?P<root>%s)%s$' % (prefix, known, postfix)
         any_pattern = '(?i)^%s(?P<root>.*?)%s$' % (prefix, postfix)
         mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
