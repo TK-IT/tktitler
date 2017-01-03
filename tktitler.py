@@ -9,10 +9,6 @@ import unicodedata
 _gfyear = _GFYEAR_UNSET = object()
 
 
-PREFIXTYPE_NORMAL = "normal"
-PREFIXTYPE_UNICODE = "unicode"
-
-
 def get_gfyear(argument_gfyear=None):
     if argument_gfyear is None:
         r = _gfyear
@@ -53,6 +49,10 @@ class _Override(object):
 
 def set_gfyear(gfyear):
     return _Override(gfyear)
+
+
+PREFIXTYPE_NORMAL = "normal"
+PREFIXTYPE_UNICODE = "unicode"
 
 
 def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
