@@ -6,7 +6,7 @@ python:
   - "3.5"
   - "3.6"
 
-script: coverage run test.py
+script: coverage run --source=tktitler test.py
 
 after_success:
   coveralls
