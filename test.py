@@ -1,12 +1,13 @@
 import unittest
 from testfixtures import log_capture
 from tktitler import (
-    tk_prefix, tk_kprefix, tk_postfix,
+    tk_prefix, tk_kprefix, tk_postfix, email,
     get_gfyear, set_gfyear,
     parse_relative, parse,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
     POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH,
     POSTFIXTYPE_LONGSINGLE, POSTFIXTYPE_LONGSLASH,
+    EMAILTYPE_POSTFIX, EMAILTYPE_PREFIX,
 )
 
 
@@ -194,6 +195,32 @@ class TestPostfix(unittest.TestCase):
         self.assertEqual(
             tk_postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSLASH),
             "CERM2016/2017")
+
+
+class TestEmail(unittest.TestCase):
+
+    def test_notype(self):
+        self.assertEqual(email(("CERM", 2011), 2016), "CERM11")
+
+    def test_AE(self):
+        self.assertEqual(email(("FUHÆ", 2011), 2016), "FUHAE11")
+
+    def test_OE(self):
+        self.assertEqual(email(("FUHØ", 2011), 2016), "FUHOE11")
+
+    def test_AAAA(self):
+        self.assertEqual(email(("FUÅÅ", 2011), 2016), "FUAAAA11")
+
+    def test_aa(self):
+        self.assertEqual(email(("fuhå", 2011), 2016), "fuhaa11")
+
+    def test_postfix(self):
+        self.assertEqual(email(("FUHØ", 2011), 2016,  type=EMAILTYPE_POSTFIX),
+                         "FUHOE11")
+
+    def test_prefix(self):
+        self.assertEqual(email(("FUHØ", 2011), 2016,  type=EMAILTYPE_PREFIX),
+                         "T2OFUHOE")
 
 
 class TestOverride(unittest.TestCase):
