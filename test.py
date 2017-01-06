@@ -6,7 +6,7 @@ from tktitler import (
     parse_relative, parse,
     PREFIXTYPE_NORMAL, PREFIXTYPE_UNICODE,
     POSTFIXTYPE_SINGLE, POSTFIXTYPE_DOUBLE, POSTFIXTYPE_SLASH,
-    POSTFIXTYPE_LONGSINGLE, POSTFIXTYPE_LONGSLASH,
+    POSTFIXTYPE_LONGSLASH,
     EMAILTYPE_POSTFIX, EMAILTYPE_PREFIX,
 )
 
@@ -185,11 +185,6 @@ class TestPostfix(unittest.TestCase):
     def test_slash(self):
         self.assertEqual(tk_postfix(("CERM", 2016), type=POSTFIXTYPE_SLASH),
                          "CERM 16/17")
-
-    def test_longsingle(self):
-        self.assertEqual(
-            tk_postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSINGLE),
-            "CERM2016")
 
     def test_longslash(self):
         self.assertEqual(

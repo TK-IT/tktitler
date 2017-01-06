@@ -101,7 +101,6 @@ def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
 POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
 POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
-POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
@@ -119,8 +118,6 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
         postfix = str(period)[2:4] + str(period+1)[2:4]
     elif type == POSTFIXTYPE_SLASH:
         postfix = " " + str(period)[2:4] + "/" + str(period+1)[2:4]
-    elif type == POSTFIXTYPE_LONGSINGLE:
-        postfix = str(period)
     elif type == POSTFIXTYPE_LONGSLASH:
         postfix = " " + str(period) + "/" + str(period+1)[2:4]
     else:
