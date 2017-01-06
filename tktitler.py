@@ -102,7 +102,7 @@ POSTFIXTYPE_SINGLE = "single"  # FUHØ11
 POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
 POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
 POSTFIXTYPE_LONGSINGLE = "longsingle"  # FUHØ2011
-POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ2011/2012
+POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
 def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
@@ -122,7 +122,7 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     elif type == POSTFIXTYPE_LONGSINGLE:
         postfix = str(period)
     elif type == POSTFIXTYPE_LONGSLASH:
-        postfix = str(period) + "/" + str(period+1)
+        postfix = " " + str(period) + "/" + str(period+1)[2:4]
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
