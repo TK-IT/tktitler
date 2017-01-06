@@ -184,7 +184,7 @@ class TestPostfix(unittest.TestCase):
 
     def test_slash(self):
         self.assertEqual(tk_postfix(("CERM", 2016), type=POSTFIXTYPE_SLASH),
-                         "CERM16/17")
+                         "CERM 16/17")
 
     def test_longsingle(self):
         self.assertEqual(
