@@ -4,7 +4,8 @@ install: pip install coveralls testfixtures
 
 python:
   - "3.5"
-  - "3.6-dev"
+  - "3.6"
+
 script: coverage run test.py
 
 after_success:
