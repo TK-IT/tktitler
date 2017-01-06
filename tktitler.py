@@ -5,6 +5,9 @@ import re
 import functools
 import unicodedata
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 _gfyear = _GFYEAR_UNSET = object()
 
@@ -196,8 +199,14 @@ def _parse_postfix(postfix):
         # won't live until the year 2122, so they are not actually
         # ambiguous.
         if postfix == '2021':
-            # TODO: Should '2021' be parsed as 2020/21 or 2021/22?
-            raise NotImplementedError(postfix)
+            # POSTFIXTYPE_LONGSINGLE is never used in email recipients,
+            # whereas POSTFIXTYPE_DOUBLE is used in 1/3 of the cases in
+            # which as postfix is given (with the remainder using
+            # POSTFIXTYPE_SINGLE).
+            logger.warning('While parsing an alias, the technically ambiguous '
+                           'postfix 2021 was met. It it assumed it means '
+                           '2020/2021.')
+            return 2020
         if (first + 1) % 100 == second:
             # There should be exactly one year between the two numbers
             return 2000 + first if first < 56 else 1900 + first
