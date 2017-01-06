@@ -1,4 +1,4 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 import os
 
 base_dir = os.path.dirname(__file__)
@@ -23,7 +23,8 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
     ],
-    packages=find_packages(exclude=['docs', 'test.py']),
+
+    py_modules=["tktitler"],
 
     extras_require={
         'test': ['testfixtures', 'coveralls'],
