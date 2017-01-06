@@ -1,4 +1,5 @@
 import unittest
+from testfixtures import log_capture
 from tktitler import (
     tk_prefix, tk_kprefix, tk_postfix,
     get_gfyear, set_gfyear,
@@ -282,6 +283,16 @@ class TestParseRelative(unittest.TestCase):
 
     def test_bestfu(self):
         self.assertEqual(parse_relative('BESTFU'), (0, 'BESTFU', None))
+
+    @log_capture()
+    def test_2021(self, l):
+        self.assertEqual(parse_relative('FORM2021'), (0, 'FORM', 2020))
+
+        l.check(
+            ('tktitler', 'WARNING', 'While parsing an alias, the technically '
+             'ambiguous postfix 2021 was met. It it assumed it means '
+             '2020/2021.')
+        )
 
 
 class TestParse(unittest.TestCase):
