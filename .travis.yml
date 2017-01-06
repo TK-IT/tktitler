@@ -1,6 +1,6 @@
 language: python
 
-install: pip install coveralls testfixtures
+install: "pip install -Ue .[test]"
 
 python:
   - "3.5"
