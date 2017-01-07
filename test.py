@@ -410,6 +410,42 @@ class TestParse(unittest.TestCase):
         with set_gfyear(2013):
             self.assertEqual(parse('FORM20/21'), ('FORM', 2020))
 
+    def test_postfix_space(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM 1617'), ('FORM', 2016))
+
+    def test_postfix_slash_space(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM 16/17'), ('FORM', 2016))
+
+    def test_postfix_longslash_space(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM 2016/17'), ('FORM', 2016))
+
+    def test_prefix_trailingspace(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T2OFORM '), ('FORM', 2008))
+
+    def test_postfix_trailingspace(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM1617 '), ('FORM', 2016))
+
+    def test_postfix_trailingspace_space(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM 1617 '), ('FORM', 2016))
+
+    def test_prefix_leadingspace(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse(' T2OFORM'), ('FORM', 2008))
+
+    def test_postfix_leadingspace(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse(' FORM1617'), ('FORM', 2016))
+
+    def test_postfix_leadingspace_space(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse(' FORM 1617'), ('FORM', 2016))
+
 
 if __name__ == '__main__':
     unittest.main()

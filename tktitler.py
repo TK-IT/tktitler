@@ -153,6 +153,9 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
 
 
 def _normalize(input_alias):
+    s = input_alias.upper()
+    s = s.replace(' ', '')
+
     table = {'$': 'S',
              '\N{POUND SIGN}': 'S',
              '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}
@@ -166,7 +169,6 @@ def _normalize(input_alias):
             except ValueError:
                 return c
 
-    s = input_alias.upper()
     return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
 
 
