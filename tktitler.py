@@ -186,6 +186,9 @@ def _parse_postfix(postfix):
         raise TypeError(type(postfix))
     if not postfix:
         return
+
+    postfix = postfix.replace('/', '')
+
     if len(postfix) == 2:
         v = int(postfix)
         return 2000 + v if v < 56 else 1900 + v
@@ -210,17 +213,24 @@ def _parse_postfix(postfix):
         elif first in (19, 20):
             # 19xx or 20xx
             return int(postfix)
-        else:
-            raise ValueError(postfix)
-    else:
-        # Length is neither 2 nor 4
-        raise ValueError(postfix)
+    elif len(postfix) == 6:
+        longFirst, shortFirst = int(postfix[0:4]), int(postfix[2:4])
+        second = int(postfix[4:6])
+        if (shortFirst + 1) % 100 == second:
+            # 2012/13
+            return longFirst
+    elif len(postfix) == 8:
+        first, second = int(postfix[0:4]), int(postfix[4:8])
+        if (first + 1) == second:
+            # 2012/2013
+            return first
+    raise ValueError(postfix)
 
 
 def parse_relative(input_alias):
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
-    postfix = r"(?P<post>[0-9]*)"
+    postfix = r"(?P<post>([0-9/])*)"
     letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
     known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
              'E?FU(?:%s){2}|' % letter +

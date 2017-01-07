@@ -390,6 +390,26 @@ class TestParse(unittest.TestCase):
         with set_gfyear(2013):
             self.assertEqual(parse('FORM2016'), ('FORM', 2016))
 
+    def test_postfix_slash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM16/17'), ('FORM', 2016))
+
+    def test_postfix_longslash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM2016/17'), ('FORM', 2016))
+
+    def test_postfix_reallylongslash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM2016/2017'), ('FORM', 2016))
+
+    def test_postfix_2021_long(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM2021'), ('FORM', 2020))
+
+    def test_postfix_2021_slash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM20/21'), ('FORM', 2020))
+
 
 if __name__ == '__main__':
     unittest.main()
