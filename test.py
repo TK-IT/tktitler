@@ -326,9 +326,69 @@ class TestParse(unittest.TestCase):
         with set_gfyear(2013):
             self.assertEqual(parse('FORM'), ('FORM', 2013))
 
-    def test_postfix(self):
+    def test_prefix_minus_1(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('GFORM'), ('FORM', 2012))
+
+    def test_prefix_minus_2(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('BFORM'), ('FORM', 2011))
+
+    def test_prefix_minus_3(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('OFORM'), ('FORM', 2010))
+
+    def test_prefix_minus_4(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('TOFORM'), ('FORM', 2009))
+
+    def test_prefix_minus_5(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T2OFORM'), ('FORM', 2008))
+
+    def test_prefix_minus_35(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T32OFORM'), ('FORM', 1978))
+
+    def test_prefix_unicode_minus_5(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T²OFORM'), ('FORM', 2008))
+
+    def test_prefix_unicode_minus_35(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T³²OFORM'), ('FORM', 1978))
+
+    def test_prefix_plus_1(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('KFORM'), ('FORM', 2014))
+
+    def test_prefix_plus_3(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('K3FORM'), ('FORM', 2016))
+
+    def test_prefix_unicode_plus_3(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('K³FORM'), ('FORM', 2016))
+
+    def test_prefix_unicode_combined_1(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('OK³FORM'), ('FORM', 2013))
+
+    def test_prefix_unicode_combined_2(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('T2OK³FORM'), ('FORM', 2011))
+
+    def test_postfix_short(self):
         with set_gfyear(2013):
             self.assertEqual(parse('FORM16'), ('FORM', 2016))
+
+    def test_postfix_double(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM1617'), ('FORM', 2016))
+
+    def test_postfix_long(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('FORM2016'), ('FORM', 2016))
 
 
 if __name__ == '__main__':
