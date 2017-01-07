@@ -175,6 +175,14 @@ def _normalize(input_alias):
     return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
 
 
+def _normalize_escaped(alias):
+    replace_dict = {'OE': 'Ø',
+                    'AE': 'Æ',
+                    'AA': 'Å'}
+    alias = _multireplace(alias, replace_dict)
+    return alias
+
+
 def _parse_prefix(prefix):
     pattern = r"^([KGBOT][KGBOT0-9]*)?$"
     if not re.match(pattern, prefix):
@@ -236,16 +244,27 @@ def parse_relative(input_alias):
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
     postfix = r"(?P<post>([0-9/])*)"
-    letter = '[A-Z]|Æ|Ø|Å|AE|OE|AA'
+    letter = '[A-Z]|Æ|Ø|Å'
+    known_escaped = 'E?FU((AE|OE|AA){2}|(AE|OE|AA)[A-Z]|[A-Z](AE|OE|AA))'
     known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
              'E?FU(?:%s){2}|' % letter +
              'BEST|FU|BESTFU')
+    known_escaped_pattern = '^%s(?P<root>%s)%s$' % (prefix, known_escaped, postfix)
     known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
     any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
-    mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
-    assert mo is not None
-    pre, root, post = mo.group('pre', 'root', 'post')
-    assert alias == pre + root + post
+
+    pre = root = post = ''
+
+    mo = re.match(known_escaped_pattern, alias)
+    if mo is not None:
+        pre, root, post = mo.group('pre', 'root', 'post')
+        root = _normalize_escaped(root)
+    else:
+        mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
+        assert mo is not None
+        pre, root, post = mo.group('pre', 'root', 'post')
+        assert alias == pre + root + post
+
     age = _parse_prefix(pre)
     gfyear = _parse_postfix(post)
     return age, root, gfyear
