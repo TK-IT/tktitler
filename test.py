@@ -216,7 +216,10 @@ class TestEmail(unittest.TestCase):
         self.assertEqual(email(("FUÅÅ", 2011), 2016), "FUAAAA11")
 
     def test_aa(self):
-        self.assertEqual(email(("fuhå", 2011), 2016), "fuhaa11")
+        self.assertEqual(email(("fuhå", 2011), 2016), "FUHAA11")
+
+    def test_KASS(self):
+        self.assertEqual(email(("KA$$", 2011), 2016), "KASS11")
 
     def test_postfix(self):
         self.assertEqual(email(("FUHØ", 2011), 2016,  type=EMAILTYPE_POSTFIX),

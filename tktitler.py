@@ -140,6 +140,7 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
 
     root, period = title
 
+    root = _normalize(root)
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
