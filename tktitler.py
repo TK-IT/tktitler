@@ -156,6 +156,9 @@ def _normalize(input_alias):
     s = input_alias.upper()
     s = s.replace(' ', '')
 
+    replace_dict = {'BEST/FU': 'BESTFU'}
+    s = _multireplace(s, replace_dict)
+
     table = {'$': 'S',
              '\N{POUND SIGN}': 'S',
              '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}

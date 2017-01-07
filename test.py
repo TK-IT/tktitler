@@ -446,6 +446,22 @@ class TestParse(unittest.TestCase):
         with set_gfyear(2013):
             self.assertEqual(parse(' FORM 1617'), ('FORM', 2016))
 
+    def test_postfix_bestfu(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('BESTFU16'), ('BESTFU', 2016))
+
+    def test_postfix_bestfuslash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('BEST/FU16'), ('BESTFU', 2016))
+
+    def test_prefix_bestfu(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('BBESTFU'), ('BESTFU', 2011))
+
+    def test_prefix_bestfuslash(self):
+        with set_gfyear(2013):
+            self.assertEqual(parse('BBEST/FU'), ('BESTFU', 2011))
+
 
 if __name__ == '__main__':
     unittest.main()
