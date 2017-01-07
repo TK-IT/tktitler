@@ -249,7 +249,8 @@ def parse_relative(input_alias):
     known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
              'E?FU(?:%s){2}|' % letter +
              'BEST|FU|BESTFU')
-    known_escaped_pattern = '^%s(?P<root>%s)%s$' % (prefix, known_escaped, postfix)
+    known_escaped_pattern = '^%s(?P<root>%s)%s$' % (prefix, known_escaped,
+                                                    postfix)
     known_pattern = '^%s(?P<root>%s)%s$' % (prefix, known, postfix)
     any_pattern = '^%s(?P<root>.*?)%s$' % (prefix, postfix)
 
