@@ -110,6 +110,10 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     root, period = title
     root = _funny_substitute(root)
 
+    space = " "
+    if root == "":
+        space = ""
+
     postfix = ""
 
     if type == POSTFIXTYPE_SINGLE:
@@ -117,9 +121,9 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     elif type == POSTFIXTYPE_DOUBLE:
         postfix = str(period)[2:4] + str(period+1)[2:4]
     elif type == POSTFIXTYPE_SLASH:
-        postfix = " " + str(period)[2:4] + "/" + str(period+1)[2:4]
+        postfix = space + str(period)[2:4] + "/" + str(period+1)[2:4]
     elif type == POSTFIXTYPE_LONGSLASH:
-        postfix = " " + str(period) + "/" + str(period+1)[2:4]
+        postfix = space + str(period) + "/" + str(period+1)[2:4]
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 

@@ -191,6 +191,15 @@ class TestPostfix(unittest.TestCase):
             tk_postfix(("CERM", 2016), type=POSTFIXTYPE_LONGSLASH),
             "CERM 2016/17")
 
+    def test_empty_slash(self):
+        self.assertEqual(tk_postfix(("", 2016), type=POSTFIXTYPE_SLASH),
+                         "16/17")
+
+    def test_empty_longslash(self):
+        self.assertEqual(
+            tk_postfix(("", 2016), type=POSTFIXTYPE_LONGSLASH),
+            "2016/17")
+
 
 class TestEmail(unittest.TestCase):
 
