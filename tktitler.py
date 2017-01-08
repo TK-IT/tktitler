@@ -237,7 +237,7 @@ def _parse_postfix(postfix):
     raise ValueError(postfix)
 
 
-def parse_relative(input_alias):
+def _parse_relative(input_alias):
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
     postfix = r"(?P<post>([0-9/])*)"
@@ -257,7 +257,7 @@ def parse_relative(input_alias):
 
 
 def parse(alias, gfyear=None):
-    age, root, postfix = parse_relative(alias)
+    age, root, postfix = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
     return root, gfyear - age
 
