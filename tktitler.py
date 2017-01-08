@@ -58,7 +58,7 @@ PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
 
 
-def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     gfyear = _validate(title, gfyear)
 
     root, period = title
@@ -80,22 +80,22 @@ def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
-    prefix = ['K', '', 'G', 'B', 'O', 'TO']
+    prefixes = ['K', '', 'G', 'B', 'O', 'TO']
     if age < -1:
         return 'K%s' % sup_fn(-age) + root
-    elif age + 1 < len(prefix):
-        return prefix[age + 1] + root
+    elif age + 1 < len(prefixes):
+        return prefixes[age + 1] + root
     else:
         return 'T%sO' % sup_fn(age - 3) + root
 
 
-def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     gfyear = _validate(title, gfyear)
 
     root, period = title
     if gfyear < period:
-        return tk_prefix((root, period), gfyear, type)
-    return "K" + tk_prefix((root, period - 1), gfyear, type)
+        return prefix((root, period), gfyear, type)
+    return "K" + prefix((root, period - 1), gfyear, type)
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
@@ -104,7 +104,7 @@ POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
-def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
+def postfix(title, type=POSTFIXTYPE_SINGLE):
     _validate_title(title)
 
     root, period = title
@@ -145,16 +145,16 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
 
-    prefix = ""
-    postfix = ""
+    pre = ""
+    post = ""
     if type == EMAILTYPE_POSTFIX:
-        postfix = str(period)[2:4]
+        post = str(period)[2:4]
     elif type == EMAILTYPE_PREFIX:
-        prefix = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+        pre = prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
-    assert isinstance(prefix + root + postfix, str)
-    return prefix + root + postfix
+    assert isinstance(pre + root + post, str)
+    return pre + root + post
 
 
 def _normalize(input_alias):
