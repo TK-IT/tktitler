@@ -329,6 +329,11 @@ class TestParseRelative(unittest.TestCase):
              '2020/2021.')
         )
 
+    @log_capture()
+    def test_2021_slash(self, l):
+        self.assertEqual(tk._parse_relative('FORM20/21'), (0, 'FORM', 2020))
+        l.check()
+
     def test_invalid_slash(self):
         with self.assertRaises(ValueError):
             tk._parse_relative('FORM1/314')
