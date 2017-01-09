@@ -102,6 +102,24 @@ class TestPrefixNormal(unittest.TestCase):
                 "'somestring' is not a valid type-parameter"):
             tk.prefix(("CERM", 2001), 2016, type="somestring")
 
+    def test_invalid_title_root(self):
+        with self.assertRaisesRegex(
+                TypeError,
+                "int is not a valid type for root."):
+            tk.prefix((1, 2001), 2016)
+
+    def test_invalid_title_period(self):
+        with self.assertRaisesRegex(
+                TypeError,
+                "str is not a valid type for period."):
+            tk.prefix(("CERM", "2001"), 2016)
+
+    def test_invalid_title_period_len(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "'20010' is not a valid period"):
+            tk.prefix(("CERM", 20010), 2016)
+
 
 class TestPrefixUnicode(unittest.TestCase):
 
