@@ -329,6 +329,10 @@ class TestParseRelative(unittest.TestCase):
              '2020/2021.')
         )
 
+    def test_invalid_slash(self):
+        with self.assertRaises(ValueError):
+            tk._parse_relative('FORM1/314')
+
 
 class TestParse(unittest.TestCase):
 
