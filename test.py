@@ -271,6 +271,38 @@ class TestEmail(unittest.TestCase):
             tk.email(("FUHØ", 2011), 2016, type=tk.EMAILTYPE_PREFIX),
             "T2OFUHOE")
 
+    @log_capture()
+    def test_EFUIT(self, l):
+        self.assertEqual(tk.email(("EFUIT", 2016), 2016), "EFUIT16")
+        l.check(
+            ('tktitler', 'WARNING', 'Returning an EFUIT email with postfix. '
+             'The postfix does not necessarily represent the actual year the '
+             'given EFUIT was EFUIT.')
+        )
+
+    @log_capture()
+    def test_old_title(self, l):
+        self.assertEqual(tk.email(("BEST", 1957), 2016), "BEST57")
+        l.check(
+            ('tktitler', 'WARNING', 'Returning an email from before 1959 '
+             'with postfix. The postfix does not necessarily represent the '
+             'actual year the given BEST was BEST.')
+        )
+
+    @log_capture()
+    def test_EFUIT_pre(self, l):
+        self.assertEqual(
+            tk.email(("EFUIT", 2016), 2016, type=tk.EMAILTYPE_PREFIX),
+            "EFUIT")
+        l.check()
+
+    @log_capture()
+    def test_old_title_pre(self, l):
+        self.assertEqual(
+            tk.email(("BEST", 1957), 2016, type=tk.EMAILTYPE_PREFIX),
+            "T56OBEST")
+        l.check()
+
 
 class TestOverride(unittest.TestCase):
 

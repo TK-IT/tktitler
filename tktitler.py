@@ -164,6 +164,15 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
 
+    if root == 'EFUIT' and type == EMAILTYPE_POSTFIX:
+        logger.warning('Returning an EFUIT email with postfix. The postfix '
+                       'does not necessarily represent the actual year the '
+                       'given EFUIT was EFUIT.')
+    if period < 1959 and type == EMAILTYPE_POSTFIX:
+        logger.warning('Returning an email from before 1959 with postfix. The '
+                       'postfix does not necessarily represent the actual '
+                       'year the given %s was %s.' % (root, root))
+
     pre = ""
     post = ""
     if type == EMAILTYPE_POSTFIX:
