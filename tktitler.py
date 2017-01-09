@@ -176,6 +176,8 @@ def _normalize(input_alias):
 
 
 def _normalize_escaped(alias):
+    if ("AAA" in alias and "AAAA" not in alias) or "AAE" in alias:
+        raise ValueError("%s is an ambiguous alias. Cannot normalize." % alias)
     replace_dict = {'OE': 'Ø',
                     'AE': 'Æ',
                     'AA': 'Å'}

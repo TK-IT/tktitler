@@ -506,6 +506,20 @@ class TestParse(unittest.TestCase):
         with set_gfyear(2013):
             self.assertEqual(parse('FUAAAA11'), ('FUÅÅ', 2011))
 
+    def test_AAA(self):
+        with set_gfyear(2013):
+            with self.assertRaisesRegex(ValueError,
+                                        "FUAAA is an ambiguous alias. Cannot "
+                                        "normalize."):
+                parse('FUAAA11')
+
+    def test_AAE(self):
+        with set_gfyear(2013):
+            with self.assertRaisesRegex(ValueError,
+                                        "FUAAE is an ambiguous alias. Cannot "
+                                        "normalize."):
+                parse('FUAAE11')
+
 
 if __name__ == '__main__':
     unittest.main()
