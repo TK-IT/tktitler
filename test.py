@@ -232,6 +232,14 @@ class TestPrepostfix(unittest.TestCase):
         self.assertEqual(tk.prepostfix(("CERM", 2019), 2016),
                          "K3CERM 2019/20")
 
+    def test_EFUIT(self):
+        self.assertEqual(tk.prepostfix(("EFUIT", 2011), 2016),
+                         "T2OEFUIT")
+
+    def test_old_title(self):
+        self.assertEqual(tk.prepostfix(("BEST", 1957), 2016),
+                         "T56OBEST")
+
 
 class TestEmail(unittest.TestCase):
 

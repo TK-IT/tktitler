@@ -142,8 +142,10 @@ def postfix(title, type=POSTFIXTYPE_SINGLE):
 
 def prepostfix(title, gfyear=None, prefixtype=PREFIXTYPE_NORMAL,
                postfixtype=POSTFIXTYPE_LONGSLASH):
-    _unused, period = title
+    root, period = title
     preAndName = prefix(title, gfyear, prefixtype)
+    if root == "EFUIT" or period < 1959:
+        return preAndName
     post = postfix(("", period), postfixtype)
     return '%s %s' % (preAndName, post)
 
