@@ -197,9 +197,23 @@ def _parse_postfix(postfix):
     if not postfix:
         return
 
-    postfix = postfix.replace('/', '')
-
-    if len(postfix) == 2:
+    if '/' in postfix:
+        try:
+            first, second = postfix.split('/')
+        except ValueError:
+            raise ValueError(postfix) from None
+        lens = (len(first), len(second))
+        first, second = int(first), int(second)
+        if lens == (2, 2) and (first + 1) % 100 == second:
+            # 12/13; note that 20/21 is not ambiguous.
+            return 2000 + first if first < 56 else 1900 + first
+        elif lens == (4, 4) and first + 1 == second:
+            # 2012/2013
+            return first
+        elif lens == (4, 2) and (first + 1) % 100 == second:
+            # 2012/13
+            return first
+    elif len(postfix) == 2:
         v = int(postfix)
         return 2000 + v if v < 56 else 1900 + v
     elif len(postfix) == 4:
@@ -223,17 +237,6 @@ def _parse_postfix(postfix):
         elif first in (19, 20):
             # 19xx or 20xx
             return int(postfix)
-    elif len(postfix) == 6:
-        longFirst, shortFirst = int(postfix[0:4]), int(postfix[2:4])
-        second = int(postfix[4:6])
-        if (shortFirst + 1) % 100 == second:
-            # 2012/13
-            return longFirst
-    elif len(postfix) == 8:
-        first, second = int(postfix[0:4]), int(postfix[4:8])
-        if (first + 1) == second:
-            # 2012/2013
-            return first
     raise ValueError(postfix)
 
 
