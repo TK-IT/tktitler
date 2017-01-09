@@ -58,7 +58,7 @@ PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
 
 
-def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     gfyear = _validate(title, gfyear)
 
     root, period = title
@@ -80,22 +80,22 @@ def tk_prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
-    prefix = ['K', '', 'G', 'B', 'O', 'TO']
+    prefixes = ['K', '', 'G', 'B', 'O', 'TO']
     if age < -1:
         return 'K%s' % sup_fn(-age) + root
-    elif age + 1 < len(prefix):
-        return prefix[age + 1] + root
+    elif age + 1 < len(prefixes):
+        return prefixes[age + 1] + root
     else:
         return 'T%sO' % sup_fn(age - 3) + root
 
 
-def tk_kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     gfyear = _validate(title, gfyear)
 
     root, period = title
     if gfyear < period:
-        return tk_prefix((root, period), gfyear, type)
-    return "K" + tk_prefix((root, period - 1), gfyear, type)
+        return prefix((root, period), gfyear, type)
+    return "K" + prefix((root, period - 1), gfyear, type)
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
@@ -104,11 +104,15 @@ POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
-def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
+def postfix(title, type=POSTFIXTYPE_SINGLE):
     _validate_title(title)
 
     root, period = title
     root = _funny_substitute(root)
+
+    space = " "
+    if root == "":
+        space = ""
 
     postfix = ""
 
@@ -117,14 +121,22 @@ def tk_postfix(title, type=POSTFIXTYPE_SINGLE):
     elif type == POSTFIXTYPE_DOUBLE:
         postfix = str(period)[2:4] + str(period+1)[2:4]
     elif type == POSTFIXTYPE_SLASH:
-        postfix = " " + str(period)[2:4] + "/" + str(period+1)[2:4]
+        postfix = space + str(period)[2:4] + "/" + str(period+1)[2:4]
     elif type == POSTFIXTYPE_LONGSLASH:
-        postfix = " " + str(period) + "/" + str(period+1)[2:4]
+        postfix = space + str(period) + "/" + str(period+1)[2:4]
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
     assert isinstance(root + postfix, str)
     return root + postfix
+
+
+def prepostfix(title, gfyear=None, prefixtype=PREFIXTYPE_NORMAL,
+               postfixtype=POSTFIXTYPE_LONGSLASH):
+    _unused, period = title
+    preAndName = prefix(title, gfyear, prefixtype)
+    post = postfix(("", period), postfixtype)
+    return '%s %s' % (preAndName, post)
 
 
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
@@ -136,20 +148,21 @@ def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
 
     root, period = title
 
+    root = _normalize(root)
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
 
-    prefix = ""
-    postfix = ""
+    pre = ""
+    post = ""
     if type == EMAILTYPE_POSTFIX:
-        postfix = str(period)[2:4]
+        post = str(period)[2:4]
     elif type == EMAILTYPE_PREFIX:
-        prefix = tk_prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+        pre = prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
-    assert isinstance(prefix + root + postfix, str)
-    return prefix + root + postfix
+    assert isinstance(pre + root + post, str)
+    return pre + root + post
 
 
 def _normalize(input_alias):
@@ -202,9 +215,23 @@ def _parse_postfix(postfix):
     if not postfix:
         return
 
-    postfix = postfix.replace('/', '')
-
-    if len(postfix) == 2:
+    if '/' in postfix:
+        try:
+            first, second = postfix.split('/')
+        except ValueError:
+            raise ValueError(postfix) from None
+        lens = (len(first), len(second))
+        first, second = int(first), int(second)
+        if lens == (2, 2) and (first + 1) % 100 == second:
+            # 12/13; note that 20/21 is not ambiguous.
+            return 2000 + first if first < 56 else 1900 + first
+        elif lens == (4, 4) and first + 1 == second:
+            # 2012/2013
+            return first
+        elif lens == (4, 2) and (first + 1) % 100 == second:
+            # 2012/13
+            return first
+    elif len(postfix) == 2:
         v = int(postfix)
         return 2000 + v if v < 56 else 1900 + v
     elif len(postfix) == 4:
@@ -228,21 +255,10 @@ def _parse_postfix(postfix):
         elif first in (19, 20):
             # 19xx or 20xx
             return int(postfix)
-    elif len(postfix) == 6:
-        longFirst, shortFirst = int(postfix[0:4]), int(postfix[2:4])
-        second = int(postfix[4:6])
-        if (shortFirst + 1) % 100 == second:
-            # 2012/13
-            return longFirst
-    elif len(postfix) == 8:
-        first, second = int(postfix[0:4]), int(postfix[4:8])
-        if (first + 1) == second:
-            # 2012/2013
-            return first
     raise ValueError(postfix)
 
 
-def parse_relative(input_alias):
+def _parse_relative(input_alias):
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
     postfix = r"(?P<post>([0-9/])*)"
@@ -274,7 +290,7 @@ def parse_relative(input_alias):
 
 
 def parse(alias, gfyear=None):
-    age, root, postfix = parse_relative(alias)
+    age, root, postfix = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
     return root, gfyear - age
 
