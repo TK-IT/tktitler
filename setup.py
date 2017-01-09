@@ -5,7 +5,7 @@ base_dir = os.path.dirname(__file__)
 
 setup(
     name='tktitler',
-    version='0.2.0',
+    version='0.2.1',
     description='A library for dealing with TÅGEKAMMER-titles.',
     long_description=open(os.path.join(base_dir,
                                        'readme.rst')).read(),
