@@ -11,7 +11,7 @@ setup(
                                        'readme.rst')).read(),
     url='https://github.com/TK-IT/web',
     author='TK-IT',
-    licence='Beerware',
+    license='Beerware',
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
