@@ -500,62 +500,62 @@ class TestParse(unittest.TestCase):
             self.assertEqual(tk.parse('BBEST/FU'), ('BESTFU', 2011))
 
     def test_AE_1(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUAE11'), ('FUAE', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUAE11'), ('FUAE', 2011))
 
     def test_AE_2(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUHAE11'), ('FUHÆ', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUHAE11'), ('FUHÆ', 2011))
 
     def test_AE_3(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUAEH11'), ('FUÆH', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUAEH11'), ('FUÆH', 2011))
 
     def test_OE_1(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUOE11'), ('FUOE', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUOE11'), ('FUOE', 2011))
 
     def test_OE_2(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUHOE11'), ('FUHØ', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUHOE11'), ('FUHØ', 2011))
 
     def test_OE_3(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUOEH11'), ('FUØH', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUOEH11'), ('FUØH', 2011))
 
     def test_AA_1(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUAA11'), ('FUAA', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUAA11'), ('FUAA', 2011))
 
     def test_AA_2(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUHAA11'), ('FUHÅ', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUHAA11'), ('FUHÅ', 2011))
 
     def test_AA_3(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUAAH11'), ('FUÅH', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUAAH11'), ('FUÅH', 2011))
 
     def test_OEAA(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUOEAA11'), ('FUØÅ', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUOEAA11'), ('FUØÅ', 2011))
 
     def test_AAAA(self):
-        with set_gfyear(2013):
-            self.assertEqual(parse('FUAAAA11'), ('FUÅÅ', 2011))
+        with tk.set_gfyear(2013):
+            self.assertEqual(tk.parse('FUAAAA11'), ('FUÅÅ', 2011))
 
     def test_AAA(self):
-        with set_gfyear(2013):
+        with tk.set_gfyear(2013):
             with self.assertRaisesRegex(ValueError,
                                         "FUAAA is an ambiguous alias. Cannot "
                                         "normalize."):
-                parse('FUAAA11')
+                tk.parse('FUAAA11')
 
     def test_AAE(self):
-        with set_gfyear(2013):
+        with tk.set_gfyear(2013):
             with self.assertRaisesRegex(ValueError,
                                         "FUAAE is an ambiguous alias. Cannot "
                                         "normalize."):
-                parse('FUAAE11')
+                tk.parse('FUAAE11')
 
 
 if __name__ == '__main__':
