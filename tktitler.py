@@ -131,6 +131,14 @@ def postfix(title, type=POSTFIXTYPE_SINGLE):
     return root + postfix
 
 
+def prepostfix(title, gfyear=None, prefixtype=PREFIXTYPE_NORMAL,
+               postfixtype=POSTFIXTYPE_LONGSLASH):
+    _unused, period = title
+    preAndName = prefix(title, gfyear, prefixtype)
+    post = postfix(("", period), postfixtype)
+    return '%s %s' % (preAndName, post)
+
+
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
 EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 

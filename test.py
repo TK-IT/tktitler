@@ -200,6 +200,21 @@ class TestPostfix(unittest.TestCase):
             "2016/17")
 
 
+class TestPrepostfix(unittest.TestCase):
+
+    def test_sameyear(self):
+        self.assertEqual(tk.prepostfix(("CERM", 2016), 2016),
+                         "CERM 2016/17")
+
+    def test_year_minus_05(self):
+        self.assertEqual(tk.prepostfix(("CERM", 2011), 2016),
+                         "T2OCERM 2011/12")
+
+    def test_year_plus_03(self):
+        self.assertEqual(tk.prepostfix(("CERM", 2019), 2016),
+                         "K3CERM 2019/20")
+
+
 class TestEmail(unittest.TestCase):
 
     def test_notype(self):
