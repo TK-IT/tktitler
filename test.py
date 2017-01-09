@@ -350,6 +350,19 @@ class TestOverride(unittest.TestCase):
         with tk.set_gfyear(2015):
             self.assertEqual(tk.postfix(('CERM', 2014)), 'CERM14')
 
+    def test_notset(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "No context gfyear set. Use the gfyear argument or "
+                "set_gfyear."):
+            tk.get_gfyear()
+
+    def test_invalid_gfyear(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "'12345' is not a valid gfyear"):
+            tk.get_gfyear(12345)
+
 
 class TestParseRelative(unittest.TestCase):
 
