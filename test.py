@@ -199,6 +199,24 @@ class TestPostfix(unittest.TestCase):
             tk.postfix(("", 2016), type=tk.POSTFIXTYPE_LONGSLASH),
             "2016/17")
 
+    @log_capture()
+    def test_EFUIT(self, l):
+        self.assertEqual(tk.postfix(("EFUIT", 2016)), "EFUIT16")
+        l.check(
+            ('tktitler', 'WARNING', 'Returning an EFUIT postfix. The postfix '
+             'does not necessarily represent the actual year the given EFUIT '
+             'was EFUIT.')
+        )
+
+    @log_capture()
+    def test_old_title(self, l):
+        self.assertEqual(tk.postfix(("BEST", 1957)), "BEST57")
+        l.check(
+            ('tktitler', 'WARNING', 'Returning a postfix from before 1959. '
+             'The postfix does not necessarily represent the actual year the '
+             'given BEST was BEST.')
+        )
+
 
 class TestPrepostfix(unittest.TestCase):
 

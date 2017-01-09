@@ -108,6 +108,15 @@ def postfix(title, type=POSTFIXTYPE_SINGLE):
     _validate_title(title)
 
     root, period = title
+    if root == 'EFUIT':
+        logger.warning('Returning an EFUIT postfix. The postfix does not '
+                       'necessarily represent the actual year the given EFUIT '
+                       'was EFUIT.')
+    if period < 1959:
+        logger.warning('Returning a postfix from before 1959. The postfix '
+                       'does not necessarily represent the actual year the '
+                       'given %s was %s.' % (root, root))
+
     root = _funny_substitute(root)
 
     space = " "
