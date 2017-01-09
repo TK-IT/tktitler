@@ -96,6 +96,12 @@ class TestPrefixNormal(unittest.TestCase):
                                     "str is not a valid type for gfyear."):
             tk.prefix(("CERM", 2012), "2016")
 
+    def test_invalid_type(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "'somestring' is not a valid type-parameter"):
+            tk.prefix(("CERM", 2001), 2016, type="somestring")
+
 
 class TestPrefixUnicode(unittest.TestCase):
 
@@ -217,6 +223,12 @@ class TestPostfix(unittest.TestCase):
              'given BEST was BEST.')
         )
 
+    def test_invalid_type(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "'somestring' is not a valid type-parameter"):
+            tk.postfix(("CERM", 2001), type="somestring")
+
 
 class TestPrepostfix(unittest.TestCase):
 
@@ -302,6 +314,12 @@ class TestEmail(unittest.TestCase):
             tk.email(("BEST", 1957), 2016, type=tk.EMAILTYPE_PREFIX),
             "T56OBEST")
         l.check()
+
+    def test_invalid_type(self):
+        with self.assertRaisesRegex(
+                ValueError,
+                "'somestring' is not a valid type-parameter"):
+            tk.email(("CERM", 2001), 2016, type="somestring")
 
 
 class TestOverride(unittest.TestCase):
