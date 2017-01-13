@@ -319,6 +319,8 @@ def parse(alias, gfyear=None):
 
 
 def _validate_title(title):
+    if isinstance(title, _TitleABC):
+        title = title.title_tuple()
     root, period = title
     if not isinstance(root, str):
         raise TypeError(
