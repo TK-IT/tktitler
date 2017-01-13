@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 import re
+import abc
 import functools
 import unicodedata
 
@@ -10,6 +11,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 _gfyear = _GFYEAR_UNSET = object()
+
+
+class _TitleABC(metaclass=abc.ABCMeta):
+    pass
+
+
+title_class = _TitleABC.register
 
 
 def get_gfyear(argument_gfyear=None):
