@@ -67,9 +67,8 @@ PREFIXTYPE_UNICODE = "unicode"
 
 
 def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
-    gfyear = _validate(title, gfyear)
+    (root, period), gfyear = _validate(title, gfyear)
 
-    root, period = title
     root = _funny_substitute(root)
     age = gfyear - period
 
@@ -98,9 +97,8 @@ def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
 
 
 def kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
-    gfyear = _validate(title, gfyear)
+    (root, period), gfyear = _validate(title, gfyear)
 
-    root, period = title
     if gfyear < period:
         return prefix((root, period), gfyear, type)
     return "K" + prefix((root, period - 1), gfyear, type)
@@ -113,9 +111,8 @@ POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
 def postfix(title, type=POSTFIXTYPE_SINGLE):
-    _validate_title(title)
+    root, period = _validate_title(title)
 
-    root, period = title
     if root == 'EFUIT':
         logger.warning('Returning an EFUIT postfix. The postfix does not '
                        'necessarily represent the actual year the given EFUIT '
@@ -163,9 +160,7 @@ EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
 def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
-    gfyear = _validate(title, gfyear)
-
-    root, period = title
+    (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
     replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
@@ -333,11 +328,12 @@ def _validate_title(title):
             "%s is not a valid type for period." % type(period).__name__)
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
+    return title
 
 
 def _validate(title, gfyear):
-    _validate_title(title)
-    return get_gfyear(gfyear)
+    title = _validate_title(title)
+    return title, get_gfyear(gfyear)
 
 
 def _funny_substitute(root):
