@@ -665,5 +665,31 @@ class TestParse(unittest.TestCase):
                 tk.parse('FUAAE11')
 
 
+class TestTitleRegister(unittest.TestCase):
+
+    def setUp(self):
+        @tk.title_class
+        class FormTitle:
+            def __init__(self, period):
+                self.period = period
+
+            def title_tuple(self):
+                return ('FORM', self.period)
+
+        self.form = FormTitle
+
+    def test_prefix(self):
+        self.assertEqual(tk.prefix(self.form(2013), 2016), 'OFORM')
+
+    def test_kprefix(self):
+        self.assertEqual(tk.kprefix(self.form(2014), 2016), 'KOFORM')
+
+    def test_postfix(self):
+        self.assertEqual(tk.postfix(self.form(2015)), 'FORM15')
+
+    def test_prepostfix(self):
+        self.assertEqual(tk.prepostfix(self.form(2015), 2016), 'GFORM 2015/16')
+
+
 if __name__ == '__main__':
     unittest.main()
