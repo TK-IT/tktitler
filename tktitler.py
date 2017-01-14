@@ -489,7 +489,7 @@ def _parse_postfix(postfix):
 
 def _parse_relative(input_alias):
     alias = _normalize(input_alias)
-    prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*)?)"
+    prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*[KGBO0-9]|[KGBO])?)"
     postfix = r"(?P<post>([0-9/])*)"
     letter = '[A-Z]|Æ|Ø|Å'
     known_escaped = 'E?FU((AE|OE|AA){2}|(AE|OE|AA)[A-Z]|[A-Z](AE|OE|AA))'
