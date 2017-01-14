@@ -64,6 +64,11 @@ def set_gfyear(gfyear):
 
 PREFIXTYPE_NORMAL = "normal"
 PREFIXTYPE_UNICODE = "unicode"
+PREFIXTYPE_TEX = "tex"
+
+
+def _escape_tex(s):
+    return str(s).replace('$', r'\$')
 
 
 def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
@@ -72,6 +77,9 @@ def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
     root = _funny_substitute(root)
     age = gfyear - period
 
+    if type == PREFIXTYPE_TEX:
+        root = _escape_tex(root)
+
     def identity(n):
         return n
 
@@ -79,11 +87,16 @@ def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
         digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
         return ''.join(digits[int(i)] for i in str(n))
 
+    def tex_superscript(n):
+        return '$^{%s}$' % (n,)
+
     sup_fn = None
     if type == PREFIXTYPE_NORMAL:
         sup_fn = identity
     elif type == PREFIXTYPE_UNICODE:
         sup_fn = unicode_superscript
+    elif type == PREFIXTYPE_TEX:
+        sup_fn = tex_superscript
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
 
