@@ -691,5 +691,38 @@ class TestTitleRegister(unittest.TestCase):
         self.assertEqual(tk.prepostfix(self.form(2015), 2016), 'GFORM 2015/16')
 
 
+class TestTex(unittest.TestCase):
+
+    def test_current(self):
+        self.assertEqual(
+            tk.prefix(('FORM', 2016), 2016, type=tk.PREFIXTYPE_TEX),
+            'FORM')
+
+    def test_simple_old(self):
+        self.assertEqual(
+            tk.prefix(('FORM', 2012), 2016, type=tk.PREFIXTYPE_TEX),
+            'TOFORM')
+
+    def test_simple_future(self):
+        self.assertEqual(
+            tk.prefix(('FORM', 2017), 2016, type=tk.PREFIXTYPE_TEX),
+            'KFORM')
+
+    def test_exponent_old(self):
+        self.assertEqual(
+            tk.prefix(('FORM', 2010), 2016, type=tk.PREFIXTYPE_TEX),
+            'T$^{3}$OFORM')
+
+    def test_exponent_new(self):
+        self.assertEqual(
+            tk.prefix(('FORM', 2018), 2016, type=tk.PREFIXTYPE_TEX),
+            'K$^{2}$FORM')
+
+    def test_funny(self):
+        self.assertEqual(
+            tk.prefix(('KASS', 2013), 2016, type=tk.PREFIXTYPE_TEX),
+            r'OKA\$\$')
+
+
 if __name__ == '__main__':
     unittest.main()
