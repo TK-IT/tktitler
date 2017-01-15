@@ -474,6 +474,38 @@ def _parse_relative(input_alias):
 
 
 def parse(alias, gfyear=None):
+    '''
+    Givet et alias, returner en tupel af (root, period).
+
+    :param str alias:
+    :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
+                       sættes som en context. Se :doc:`gfyear`.
+
+    :rtype: tuple
+
+    :example:
+
+    >>> parse('FUAN', 2016)
+    ('FUAN', 2016)
+    >>> parse('FORM11')
+    ('FORM', 2011)
+    >>> parse('KA$$ 2012/13')
+    ('KASS', 2012)
+    >>> parse('GFUOEP17', 2015)
+    ('FUØP', 2016)
+    >>> parse('T³OCERM', 2016)
+    ('CERM', 2010)
+    >>> parse('OTTOFUET', 2021)
+    ('FUET', 2013)
+    >>> parse('G3OKFORM13', 2030)
+    ('FORM', 2008)
+    >>> parse('KUNDESERVICE', 2006)
+    ('UNDESERVICE', 2007)
+    >>> parse('T3OKUNDESERVICE12', 2006)
+    ('UNDESERVICE', 2007)
+    >>> parse('T2OABEN', 2020)
+    ('ABEN', 2015)
+    '''
     age, root, postfix = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
     return root, gfyear - age
