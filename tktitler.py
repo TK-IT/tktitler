@@ -79,15 +79,15 @@ def _escape_tex(s):
 
 def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
     """
-    Given en title af (root, period), retunerer titlen skrevet med prefix.
+    Givet en titel af (root, period), returner titlen skrevet med prefix.
 
     :param tuple title: tupel af en str og int, hvor strengen er roden af
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
                        sættes som en context. Se :doc:`gfyear`.
-    :param type: en keyword-only option til at ændre typen af outputet. Den
-                 kan være :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE`
-                 eller :data:`PREFIXTYPE_TEX`.
+    :param type: Format af output. Skal være enten
+                 :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE` eller
+                 :data:`PREFIXTYPE_TEX`.
 
     :rtype: str
 
