@@ -142,6 +142,32 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
 
 
 def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
+    """
+    Givet en titel af (root, period), returner titlen skrevet med et prefix
+    der starter med K.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
+                       sættes som en context. Se :doc:`gfyear`.
+    :param type: Format af output. Skal være enten
+                 :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE` eller
+                 :data:`PREFIXTYPE_TEX`.
+
+    :rtype: str
+
+    :example:
+
+    >>> prefix(('KASS', 2011), gfyear=2016)
+    'T2OKA$$'
+
+    >>> kprefix(('KASS', 2011), gfyear=2016)
+    'KT3OKA$$'
+
+    >>> kprefix(('CERM', 2018), gfyear=2016)
+    'K2CERM'
+
+    """
     (root, period), gfyear = _validate(title, gfyear)
 
     if gfyear < period:
@@ -150,12 +176,44 @@ def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
+"Type til :func:`postfix` der giver tocifret postfix, f.eks. FUHI11"
 POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
+"Type til :func:`postfix` der giver firecifret postfix, f.eks. FUHI1112"
 POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
+"""Type til :func:`postfix` der giver postfix med skråstreg og mellemrum,
+f.eks. FUHI 11/12"""
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
+"""Type til :func:`postfix` der giver langt postfix med skråstreg og mellemrum,
+f.eks. FUHI 2011/12"""
 
 
 def postfix(title, *, type=POSTFIXTYPE_SINGLE):
+    """
+    Givet en titel af (root, period), returner titlen skrevet med postfix.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :param type: Format af output. Skal være enten
+                 :data:`POSTFIXTYPE_SINGLE`, :data:`POSTFIXTYPE_DOUBLE`,
+                 :data:`POSTFIXTYPE_SLASH` eller :data:`POSTFIXTYPE_LONGSLASH`.
+
+    :rtype: str
+
+    :example:
+
+    >>> postfix(('KASS', 2011))
+    'KA$$11'
+
+    >>> postfix(('FORM', 2010), type=POSTFIXTYPE_DOUBLE)
+    'FORM1011'
+
+    >>> postfix(('CERM', 2017), type=POSTFIXTYPE_SLASH)
+    'CERM 17/18'
+
+    >>> postfix(('FUHØ', 2011), type=POSTFIXTYPE_LONGSLASH)
+    'FUHØ 2011/12'
+
+    """
     root, period = _validate_title(title)
 
     if root == 'EFUIT':
