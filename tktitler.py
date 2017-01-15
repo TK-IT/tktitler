@@ -167,6 +167,9 @@ def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
     >>> kprefix(('CERM', 2018), gfyear=2016)
     'K2CERM'
 
+    >>> kprefix(('UNDESERVICE', 2007), 2012)
+    'KT3OUNDESERVICE'
+
     """
     (root, period), gfyear = _validate(title, gfyear)
 
