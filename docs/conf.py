@@ -19,7 +19,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 project = pkg_info.name
-copyright = '1956-%s TÅGEKAMMERET' % datetime.datetime.now().year
+copyright = '1956-%s TAAGEKAMMERET' % datetime.datetime.now().year
 author = 'TK-IT'
 
 version = release = pkg_info.version
