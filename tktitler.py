@@ -250,6 +250,32 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
 
 def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
                postfixtype=POSTFIXTYPE_LONGSLASH):
+    """
+    Givet en titel af (root, period), returner titlen skrevet med
+    både prefix og postfix.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
+                       sættes som en context. Se :doc:`gfyear`.
+    :param prefixtype: Format af prefix. Skal være enten
+                       :data:`PREFIXTYPE_NORMAL`,
+                       :data:`PREFIXTYPE_UNICODE` eller
+                       :data:`PREFIXTYPE_TEX`.
+    :param postfixtype: Format af output. Skal være enten
+                        :data:`POSTFIXTYPE_SINGLE`,
+                        :data:`POSTFIXTYPE_DOUBLE`,
+                        :data:`POSTFIXTYPE_SLASH` eller
+                        :data:`POSTFIXTYPE_LONGSLASH`.
+
+    :rtype: str
+
+    :example:
+
+    >>> prepostfix(('KASS', 2011), gfyear=2016)
+    'T2OKA$$ 2011/12'
+
+    """
     root, period = _validate_title(title)
     preAndName = prefix(title, gfyear, type=prefixtype)
     if root == "EFUIT" or period < 1959:
@@ -263,6 +289,30 @@ EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
 def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
+    """
+    Givet en titel af (root, period), returner titlens emailnavn.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
+                       sættes som en context. Se :doc:`gfyear`.
+    :param type: Format af output. Skal være enten
+                 :data:`EMAILTYPE_POSTFIX` eller :data:`EMAILTYPE_PREFIX`.
+
+    :rtype: str
+
+    :example:
+
+    >>> email(('KASS', 2011), 2017)
+    'KASS11'
+
+    >>> email(('FUHØ', 2010), 2016, type=EMAILTYPE_PREFIX)
+    'T3OFUHOE'
+
+    >>> email(('FUÅÆ', 2012), 2015)
+    'FUAAAE12'
+
+    """
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
