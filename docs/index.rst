@@ -6,6 +6,11 @@
 Velkommen til dokumentationen for tktitler!
 ===========================================
 
+Alle eksempler i denne dokumentation antager at `tktitler`
+er importeret som `tk`::
+
+  >>> import tktitler as tk
+
 .. toctree::
    :maxdepth: 2
    :caption: Indhold:
