@@ -3,19 +3,19 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Velkommen til documentation for tktitler!
-=========================================
+Velkommen til dokumentationen for tktitler!
+===========================================
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
+   :caption: Indhold:
 
    gfyear
    writing
    parsing
 
-Indices and tables
-==================
+Oversigter
+==========
 
 * :ref:`genindex`
 * :ref:`modindex`
