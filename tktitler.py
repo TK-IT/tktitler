@@ -63,8 +63,14 @@ def set_gfyear(gfyear):
 
 
 PREFIXTYPE_NORMAL = "normal"
+"""Type til :func:`prefix` der giver output med normale ASCII tal."""
 PREFIXTYPE_UNICODE = "unicode"
+"""Type til :func:`prefix` der giver output med unicode-superscript tal."""
 PREFIXTYPE_TEX = "tex"
+"""Type til :func:`prefix` der giver output med TeX-superscript numre og
+escapede tegn.
+
+"""
 
 
 def _escape_tex(s):
@@ -72,6 +78,32 @@ def _escape_tex(s):
 
 
 def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
+    """
+    Given en title af (root, period), retunerer titlen skrevet med prefix.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
+                       sættes som en context. Se :doc:`gfyear`.
+    :param type: en keyword-only option til at ændre typen af outputet. Den
+                 kan være :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE`
+                 eller :data:`PREFIXTYPE_TEX`.
+
+    :rtype: str
+
+    :example:
+
+    >>> prefix(('KASS', 2011), gfyear=2016)
+    'T2OKA$$'
+
+    >>> prefix(('FORM', 2010), 2016, type=PREFIXTYPE_UNICODE)
+    'T³OFORM'
+
+    >>> with set_gfyear(2015):
+    ...     prefix(('CERM', 2017), type=PREFIXTYPE_TEX)
+    'K$^{2}$CERM'
+
+    """
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _funny_substitute(root)
