@@ -1,6 +1,8 @@
 # encoding: utf8
 from __future__ import unicode_literals
 
+import tktitler as tk
+
 import re
 import abc
 import functools
@@ -31,10 +33,10 @@ def get_gfyear(argument_gfyear=None):
     :example:
 
     >>> def current_age(gfyear=None):
-    ...     return get_gfyear(gfyear) - 1956
+    ...     return tk.get_gfyear(gfyear) - 1956
     >>> current_age(2016)
     60
-    >>> with set_gfyear(2031):
+    >>> with tk.set_gfyear(2031):
     ...     current_age()
     75
     '''
@@ -85,13 +87,13 @@ def set_gfyear(gfyear):
 
     :example:
 
-    >>> with set_gfyear(2013):
-    ...     prefix(('FORM', 2012))
+    >>> with tk.set_gfyear(2013):
+    ...     tk.prefix(('FORM', 2012))
     'GFORM'
 
-    >>> @set_gfyear(2016)
+    >>> @tk.set_gfyear(2016)
     ... def get_j60_name(title):
-    ...     return prepostfix(title)
+    ...     return tk.prepostfix(title)
     >>> get_j60_name(('FORM', 2013))
     'OFORM 2013/14'
     '''
@@ -129,14 +131,14 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
 
     :example:
 
-    >>> prefix(('KASS', 2011), gfyear=2016)
+    >>> tk.prefix(('KASS', 2011), gfyear=2016)
     'T2OKA$$'
 
-    >>> prefix(('FORM', 2010), 2016, type=PREFIXTYPE_UNICODE)
+    >>> tk.prefix(('FORM', 2010), 2016, type=tk.PREFIXTYPE_UNICODE)
     'T³OFORM'
 
-    >>> with set_gfyear(2015):
-    ...     prefix(('CERM', 2017), type=PREFIXTYPE_TEX)
+    >>> with tk.set_gfyear(2015):
+    ...     tk.prefix(('CERM', 2017), type=tk.PREFIXTYPE_TEX)
     'K$^{2}$CERM'
 
     """
@@ -194,16 +196,16 @@ def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
 
     :example:
 
-    >>> prefix(('KASS', 2011), gfyear=2016)
+    >>> tk.prefix(('KASS', 2011), gfyear=2016)
     'T2OKA$$'
 
-    >>> kprefix(('KASS', 2011), gfyear=2016)
+    >>> tk.kprefix(('KASS', 2011), gfyear=2016)
     'KT3OKA$$'
 
-    >>> kprefix(('CERM', 2018), gfyear=2016)
+    >>> tk.kprefix(('CERM', 2018), gfyear=2016)
     'K2CERM'
 
-    >>> kprefix(('UNDESERVICE', 2007), 2012)
+    >>> tk.kprefix(('UNDESERVICE', 2007), 2012)
     'KT3OUNDESERVICE'
 
     """
@@ -240,16 +242,16 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
 
     :example:
 
-    >>> postfix(('KASS', 2011))
+    >>> tk.postfix(('KASS', 2011))
     'KA$$11'
 
-    >>> postfix(('FORM', 2010), type=POSTFIXTYPE_DOUBLE)
+    >>> tk.postfix(('FORM', 2010), type=tk.POSTFIXTYPE_DOUBLE)
     'FORM1011'
 
-    >>> postfix(('CERM', 2017), type=POSTFIXTYPE_SLASH)
+    >>> tk.postfix(('CERM', 2017), type=tk.POSTFIXTYPE_SLASH)
     'CERM 17/18'
 
-    >>> postfix(('FUHØ', 2011), type=POSTFIXTYPE_LONGSLASH)
+    >>> tk.postfix(('FUHØ', 2011), type=tk.POSTFIXTYPE_LONGSLASH)
     'FUHØ 2011/12'
 
     """
@@ -316,7 +318,7 @@ def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
 
     :example:
 
-    >>> prepostfix(('KASS', 2011), gfyear=2016)
+    >>> tk.prepostfix(('KASS', 2011), gfyear=2016)
     'T2OKA$$ 2011/12'
 
     """
@@ -347,13 +349,13 @@ def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
 
     :example:
 
-    >>> email(('KASS', 2011), 2017)
+    >>> tk.email(('KASS', 2011), 2017)
     'KASS11'
 
-    >>> email(('FUHØ', 2010), 2016, type=EMAILTYPE_PREFIX)
+    >>> tk.email(('FUHØ', 2010), 2016, type=tk.EMAILTYPE_PREFIX)
     'T3OFUHOE'
 
-    >>> email(('FUÅÆ', 2012), 2015)
+    >>> tk.email(('FUÅÆ', 2012), 2015)
     'FUAAAE12'
 
     """
@@ -521,25 +523,25 @@ def parse(alias, gfyear=None):
 
     :example:
 
-    >>> parse('FUAN', 2016)
+    >>> tk.parse('FUAN', 2016)
     ('FUAN', 2016)
-    >>> parse('FORM11')
+    >>> tk.parse('FORM11')
     ('FORM', 2011)
-    >>> parse('KA$$ 2012/13')
+    >>> tk.parse('KA$$ 2012/13')
     ('KASS', 2012)
-    >>> parse('GFUOEP17', 2015)
+    >>> tk.parse('GFUOEP17', 2015)
     ('FUØP', 2016)
-    >>> parse('T³OCERM', 2016)
+    >>> tk.parse('T³OCERM', 2016)
     ('CERM', 2010)
-    >>> parse('OTTOFUET', 2021)
+    >>> tk.parse('OTTOFUET', 2021)
     ('FUET', 2013)
-    >>> parse('G3OKFORM13', 2030)
+    >>> tk.parse('G3OKFORM13', 2030)
     ('FORM', 2008)
-    >>> parse('KUNDESERVICE', 2006)
+    >>> tk.parse('KUNDESERVICE', 2006)
     ('UNDESERVICE', 2007)
-    >>> parse('T3OKUNDESERVICE12', 2006)
+    >>> tk.parse('T3OKUNDESERVICE12', 2006)
     ('UNDESERVICE', 2007)
-    >>> parse('T2OABEN', 2020)
+    >>> tk.parse('T2OABEN', 2020)
     ('ABEN', 2015)
     '''
     age, root, postfix = _parse_relative(alias)
