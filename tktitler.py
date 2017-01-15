@@ -71,7 +71,7 @@ def _escape_tex(s):
     return str(s).replace('$', r'\$')
 
 
-def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _funny_substitute(root)
@@ -109,12 +109,12 @@ def prefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
         return 'T%sO' % sup_fn(age - 3) + root
 
 
-def kprefix(title, gfyear=None, type=PREFIXTYPE_NORMAL):
+def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
     (root, period), gfyear = _validate(title, gfyear)
 
     if gfyear < period:
-        return prefix((root, period), gfyear, type)
-    return "K" + prefix((root, period - 1), gfyear, type)
+        return prefix((root, period), gfyear, type=type)
+    return "K" + prefix((root, period - 1), gfyear, type=type)
 
 
 POSTFIXTYPE_SINGLE = "single"  # FUHØ11
@@ -123,7 +123,7 @@ POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
 POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
-def postfix(title, type=POSTFIXTYPE_SINGLE):
+def postfix(title, *, type=POSTFIXTYPE_SINGLE):
     root, period = _validate_title(title)
 
     if root == 'EFUIT':
@@ -158,13 +158,13 @@ def postfix(title, type=POSTFIXTYPE_SINGLE):
     return root + postfix
 
 
-def prepostfix(title, gfyear=None, prefixtype=PREFIXTYPE_NORMAL,
+def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
                postfixtype=POSTFIXTYPE_LONGSLASH):
     root, period = _validate_title(title)
-    preAndName = prefix(title, gfyear, prefixtype)
+    preAndName = prefix(title, gfyear, type=prefixtype)
     if root == "EFUIT" or period < 1959:
         return preAndName
-    post = postfix(("", period), postfixtype)
+    post = postfix(("", period), type=postfixtype)
     return '%s %s' % (preAndName, post)
 
 
@@ -172,7 +172,7 @@ EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
 EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
-def email(title, gfyear=None, type=EMAILTYPE_POSTFIX):
+def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
