@@ -257,6 +257,11 @@ def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
     Givet en titel af (root, period), returner titlen skrevet med
     både prefix og postfix.
 
+    Titler med både pre- og postfix kan bruges i lister over årgange
+    så det er nemt for brugeren at slå op efter enten prefix eller postfix.
+    Bemærk at outputtet fra denne funktion ikke kan genfortolkes med
+    :func:`parse`, da prefixet parses relativt til postfixet.
+
     :param tuple title: tupel af en str og int, hvor strengen er roden af
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
