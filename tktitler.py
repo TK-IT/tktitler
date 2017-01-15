@@ -21,6 +21,24 @@ title_class = _TitleABC.register
 
 
 def get_gfyear(argument_gfyear=None):
+    '''Returner et ikke-None argument eller det nuværende gfyear.
+
+    :param argument_gfyear: kan gives en ikke-None værdi for at overskrive
+                            det nuværende gfyear.
+
+    :rtype: int
+
+    :example:
+
+    >>> def current_age(gfyear=None):
+    ...     return get_gfyear(gfyear) - 1956
+    >>> current_age(2016)
+    60
+    >>> with set_gfyear(2031):
+    ...     current_age()
+    75
+    '''
+
     if argument_gfyear is None:
         r = _gfyear
     else:
@@ -59,6 +77,24 @@ class _Override(object):
 
 
 def set_gfyear(gfyear):
+    '''Sæt årstallet hvor den nuværende BEST er valgt.
+
+    Kan bruges som :ref:`decorator` eller :ref:`context manager`.
+
+    :param int gfyear:
+
+    :example:
+
+    >>> with set_gfyear(2013):
+    ...     prefix(('FORM', 2012))
+    'GFORM'
+
+    >>> @set_gfyear(2016)
+    ... def get_j60_name(title):
+    ...     return prepostfix(title)
+    >>> get_j60_name(('FORM', 2013))
+    'OFORM 2013/14'
+    '''
     return _Override(gfyear)
 
 
