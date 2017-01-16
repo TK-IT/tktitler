@@ -12,6 +12,7 @@ pkg_info = pkginfo.Develop(os.path.join(os.path.dirname(__file__), '..'))
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    'sphinx.ext.viewcode',
     ]
 
 templates_path = ['_templates']
