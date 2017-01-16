@@ -14,12 +14,13 @@ er importeret som `tk`::
   >>> import tktitler as tk
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Indhold:
 
    gfyear
    writing
    parsing
+   changes
 
 Quickstart
 ==========
