@@ -19,4 +19,6 @@ Skrive titler
 .. autofunction:: prepostfix
 
 .. autofunction:: email
+.. autodata:: EMAILTYPE_POSTFIX
+.. autodata:: EMAILTYPE_PREFIX
 

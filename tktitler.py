@@ -331,7 +331,13 @@ def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
 
 
 EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
+"""Type til :func:`email` der giver et emailnavn som postfix. f.eks. FORM12"""
 EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
+"""Type til :func:`email` der giver et emailnavn som prefix. f.eks. OEFUIT. Den
+ er nyttig til EFUIT-titler hvor årstallet nødvendigvis ikke hænger sammen med
+ hvornår en EFUIT var EFUIT.
+
+"""
 
 
 def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
