@@ -22,11 +22,11 @@ class _TitleABC(metaclass=abc.ABCMeta):
 title_class = _TitleABC.register
 
 
-def get_gfyear(argument_gfyear=None):
+def get_gfyear(gfyear=None):
     '''Returner et ikke-None argument eller det nuværende gfyear.
 
-    :param argument_gfyear: kan gives en ikke-None værdi for at overskrive
-                            det nuværende gfyear.
+    :param int gfyear: kan gives en ikke-None værdi for at overskrive
+                       det nuværende gfyear.
 
     :rtype: int
 
@@ -41,10 +41,10 @@ def get_gfyear(argument_gfyear=None):
     75
     '''
 
-    if argument_gfyear is None:
+    if gfyear is None:
         r = _gfyear
     else:
-        r = argument_gfyear
+        r = gfyear
     if r is _GFYEAR_UNSET:
         raise ValueError("No context gfyear set. Use the gfyear argument " +
                          "or set_gfyear.")
