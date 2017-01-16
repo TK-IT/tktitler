@@ -83,7 +83,8 @@ def set_gfyear(gfyear):
 
     Kan bruges som :ref:`decorator` eller :ref:`context manager`.
 
-    :param int gfyear:
+    :param int gfyear: året som relative titler i kodeblokken bliver regnet ud
+                       efter. Typisk året hvor nuværnde BEST er valgt.
 
     :example:
 

@@ -14,4 +14,10 @@ For at aflæse det nuværende årstal bruges :func:`get_gfyear`.
 
 .. autofunction:: set_gfyear
 
+Læg mærke til at følgende **ikke** virker:
+
+>>> tk.set_gfyear(2016)
+>>> tk.prefix(("FUBØ", 2011))
+
+
 .. autofunction:: get_gfyear
