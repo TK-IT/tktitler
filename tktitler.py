@@ -308,7 +308,7 @@ def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
                        :data:`PREFIXTYPE_NORMAL`,
                        :data:`PREFIXTYPE_UNICODE` eller
                        :data:`PREFIXTYPE_TEX`.
-    :param postfixtype: Format af output. Skal være enten
+    :param postfixtype: Format af postfix. Skal være enten
                         :data:`POSTFIXTYPE_SINGLE`,
                         :data:`POSTFIXTYPE_DOUBLE`,
                         :data:`POSTFIXTYPE_SLASH` eller
