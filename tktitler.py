@@ -81,7 +81,7 @@ class _Override(object):
 def set_gfyear(gfyear):
     '''Sæt årstallet hvor den nuværende BEST er valgt.
 
-    Kan bruges som :ref:`decorator` eller :ref:`context manager`.
+    Kan bruges som :std:term:`decorator` eller :std:term:`context manager`.
 
     :param int gfyear: året som relative titler i kodeblokken bliver regnet ud
                        efter. Typisk året hvor nuværnde BEST er valgt.
