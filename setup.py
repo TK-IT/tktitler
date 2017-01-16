@@ -28,6 +28,6 @@ setup(
 
     extras_require={
         'test': ['testfixtures', 'coveralls'],
-        'build': ['sphinx', 'pkginfo'],
+        'build': ['sphinx'],
     },
 )
