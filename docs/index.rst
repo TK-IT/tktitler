@@ -30,11 +30,11 @@ Quickstart
 #
 >>> tk.prefix(("CERM", 2014), 2016)
 'BCERM'
->>> tk.prefix(("KASS", 2008), 2016, type=tk.PREFIXTYPE_UNICODE)
+>>> tk.prefix(("KASS", 2008), 2016, type='unicode')
 'T⁵OKA$$'
 >>> tk.postfix(("CERM", 2014))
 'CERM14'
->>> tk.postfix(("KASS", 2008), type=tk.POSTFIXTYPE_LONGSLASH)
+>>> tk.postfix(("KASS", 2008), type='longslash')
 'KA$$ 2008/09'
 #
 # Parse titler
