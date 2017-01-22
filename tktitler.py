@@ -226,27 +226,33 @@ def kprefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
     return "K" + prefix((root, period - 1), gfyear, type=type)
 
 
-POSTFIXTYPE_SINGLE = "single"  # FUHØ11
-"Type til :func:`postfix` der giver tocifret postfix, f.eks. FUHI11"
-POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
-"Type til :func:`postfix` der giver firecifret postfix, f.eks. FUHI1112"
-POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
-"""Type til :func:`postfix` der giver postfix med skråstreg og mellemrum,
-f.eks. FUHI 11/12"""
-POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
-"""Type til :func:`postfix` der giver langt postfix med skråstreg og mellemrum,
-f.eks. FUHI 2011/12"""
+_POSTFIXTYPE_SINGLE = "single"  # FUHØ11
+_POSTFIXTYPE_DOUBLE = "double"  # FUHØ1112
+_POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
+_POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
-def postfix(title, *, type=POSTFIXTYPE_SINGLE):
+def postfix(title, *, type=_POSTFIXTYPE_SINGLE):
     """
     Givet en titel af (root, period), returner titlen skrevet med postfix.
 
     :param tuple title: tupel af en str og int, hvor strengen er roden af
                         titlen og int er perioden.
-    :param type: Format af output. Skal være enten
-                 :data:`POSTFIXTYPE_SINGLE`, :data:`POSTFIXTYPE_DOUBLE`,
-                 :data:`POSTFIXTYPE_SLASH` eller :data:`POSTFIXTYPE_LONGSLASH`.
+    :param str type: Format af output. En af de følgende strenge:
+
+                 ``single``
+                     Giver et tocifret postfix, f.eks. FUHI11.
+
+                 ``double``
+                     Giver et firecifret postfix, f.eks. FUHI1112
+
+                 ``slash``
+                     Giver et postfix med skråstreg og mellemrum,
+                     f.eks. FUHI 11/12
+
+                 ``longslash``
+                     Giver langt postfix med skråstreg og mellemrum,
+                     f.eks. FUHI 2011/12
 
     :rtype: str
 
@@ -255,13 +261,13 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
     >>> tk.postfix(('KASS', 2011))
     'KA$$11'
 
-    >>> tk.postfix(('FORM', 2010), type=tk.POSTFIXTYPE_DOUBLE)
+    >>> tk.postfix(('FORM', 2010), type='double')
     'FORM1011'
 
-    >>> tk.postfix(('CERM', 2017), type=tk.POSTFIXTYPE_SLASH)
+    >>> tk.postfix(('CERM', 2017), type='slash')
     'CERM 17/18'
 
-    >>> tk.postfix(('FUHØ', 2011), type=tk.POSTFIXTYPE_LONGSLASH)
+    >>> tk.postfix(('FUHØ', 2011), type='longslash')
     'FUHØ 2011/12'
 
     """
@@ -284,13 +290,13 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
 
     postfix = ""
 
-    if type == POSTFIXTYPE_SINGLE:
+    if type == _POSTFIXTYPE_SINGLE:
         postfix = str(period)[2:4]
-    elif type == POSTFIXTYPE_DOUBLE:
+    elif type == _POSTFIXTYPE_DOUBLE:
         postfix = str(period)[2:4] + str(period+1)[2:4]
-    elif type == POSTFIXTYPE_SLASH:
+    elif type == _POSTFIXTYPE_SLASH:
         postfix = space + str(period)[2:4] + "/" + str(period+1)[2:4]
-    elif type == POSTFIXTYPE_LONGSLASH:
+    elif type == _POSTFIXTYPE_LONGSLASH:
         postfix = space + str(period) + "/" + str(period+1)[2:4]
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
@@ -300,7 +306,7 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
 
 
 def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
-               postfixtype=POSTFIXTYPE_LONGSLASH):
+               postfixtype=_POSTFIXTYPE_LONGSLASH):
     """
     Givet en titel af (root, period), returner titlen skrevet med
     både prefix og postfix.
