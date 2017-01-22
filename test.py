@@ -197,30 +197,30 @@ class TestPostfix(unittest.TestCase):
 
     def test_explicit_type(self):
         self.assertEqual(
-            tk.postfix(("CERM", 2016), type=tk.POSTFIXTYPE_SINGLE),
+            tk.postfix(("CERM", 2016), type='single'),
             "CERM16")
 
     def test_double(self):
         self.assertEqual(
-            tk.postfix(("CERM", 2016), type=tk.POSTFIXTYPE_DOUBLE),
+            tk.postfix(("CERM", 2016), type='double'),
             "CERM1617")
 
     def test_slash(self):
-        self.assertEqual(tk.postfix(("CERM", 2016), type=tk.POSTFIXTYPE_SLASH),
+        self.assertEqual(tk.postfix(("CERM", 2016), type='slash'),
                          "CERM 16/17")
 
     def test_longslash(self):
         self.assertEqual(
-            tk.postfix(("CERM", 2016), type=tk.POSTFIXTYPE_LONGSLASH),
+            tk.postfix(("CERM", 2016), type='longslash'),
             "CERM 2016/17")
 
     def test_empty_slash(self):
-        self.assertEqual(tk.postfix(("", 2016), type=tk.POSTFIXTYPE_SLASH),
+        self.assertEqual(tk.postfix(("", 2016), type='slash'),
                          "16/17")
 
     def test_empty_longslash(self):
         self.assertEqual(
-            tk.postfix(("", 2016), type=tk.POSTFIXTYPE_LONGSLASH),
+            tk.postfix(("", 2016), type='longslash'),
             "2016/17")
 
     @log_capture()
