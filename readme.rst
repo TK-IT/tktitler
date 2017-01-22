@@ -18,4 +18,5 @@ Et Python-bibliotek til at håndtere TÅGEKAMMERETs persontitler.
 Dokumentation
 =============
 
-Dokumentationen kan findes på `Read the Docs<https://tktitler.readthedocs.io>`_.
+Dokumentationen kan findes på `Read the Docs
+<https://tktitler.readthedocs.io>`_.
