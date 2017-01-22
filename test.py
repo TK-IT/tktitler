@@ -68,12 +68,12 @@ class TestPrefixNormal(unittest.TestCase):
 
     def test_explicit_type_plus_2(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2018), 2016, type=tk.PREFIXTYPE_NORMAL),
+            tk.prefix(("CERM", 2018), 2016, type='normal'),
             "K2CERM")
 
     def test_explicit_type_minus_15(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2001), 2016, type=tk.PREFIXTYPE_NORMAL),
+            tk.prefix(("CERM", 2001), 2016, type='normal'),
             "T12OCERM")
 
     def test_validation_root_int(self):
@@ -125,42 +125,42 @@ class TestPrefixUnicode(unittest.TestCase):
 
     def test_sameyear(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2016), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2016), 2016, type='unicode'),
             "CERM")
 
     def test_year_minus_01(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2015), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2015), 2016, type='unicode'),
             "GCERM")
 
     def test_year_minus_05(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2011), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2011), 2016, type='unicode'),
             "T²OCERM")
 
     def test_year_minus_13(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2003), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2003), 2016, type='unicode'),
             "T¹⁰OCERM")
 
     def test_year_minus_36(self):
         self.assertEqual(
-            tk.prefix(("CERM", 1980), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 1980), 2016, type='unicode'),
             "T³³OCERM")
 
     def test_year_plus_1(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2017), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2017), 2016, type='unicode'),
             "KCERM")
 
     def test_year_plus_2(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2018), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2018), 2016, type='unicode'),
             "K²CERM")
 
     def test_year_plus_15(self):
         self.assertEqual(
-            tk.prefix(("CERM", 2031), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.prefix(("CERM", 2031), 2016, type='unicode'),
             "K¹⁵CERM")
 
 
@@ -186,7 +186,7 @@ class TestKprefix(unittest.TestCase):
 
     def test_unicode_year_minus_05(self):
         self.assertEqual(
-            tk.kprefix(("CERM", 2011), 2016, type=tk.PREFIXTYPE_UNICODE),
+            tk.kprefix(("CERM", 2011), 2016, type='unicode'),
             "KT³OCERM")
 
 
@@ -713,32 +713,32 @@ class TestTex(unittest.TestCase):
 
     def test_current(self):
         self.assertEqual(
-            tk.prefix(('FORM', 2016), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('FORM', 2016), 2016, type='tex'),
             'FORM')
 
     def test_simple_old(self):
         self.assertEqual(
-            tk.prefix(('FORM', 2012), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('FORM', 2012), 2016, type='tex'),
             'TOFORM')
 
     def test_simple_future(self):
         self.assertEqual(
-            tk.prefix(('FORM', 2017), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('FORM', 2017), 2016, type='tex'),
             'KFORM')
 
     def test_exponent_old(self):
         self.assertEqual(
-            tk.prefix(('FORM', 2010), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('FORM', 2010), 2016, type='tex'),
             'T$^{3}$OFORM')
 
     def test_exponent_new(self):
         self.assertEqual(
-            tk.prefix(('FORM', 2018), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('FORM', 2018), 2016, type='tex'),
             'K$^{2}$FORM')
 
     def test_funny(self):
         self.assertEqual(
-            tk.prefix(('KASS', 2013), 2016, type=tk.PREFIXTYPE_TEX),
+            tk.prefix(('KASS', 2013), 2016, type='tex'),
             r'OKA\$\$')
 
 
