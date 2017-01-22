@@ -428,7 +428,7 @@ def _normalize_escaped(alias):
 
 
 def _parse_prefix(prefix):
-    pattern = r"^([KGBOT][KGBOT0-9]*)?$"
+    pattern = r"^(([KGBO]|T[0-9T]*O)[0-9]*)*$"
     if not re.match(pattern, prefix):
         raise ValueError(prefix)
     prefix_value = dict(K=-1, G=1, B=2, O=3, T=1)
@@ -489,7 +489,7 @@ def _parse_postfix(postfix):
 
 def _parse_relative(input_alias):
     alias = _normalize(input_alias)
-    prefix = r"(?P<pre>(?:[KGBOT][KGBOT0-9]*[KGBO0-9]|[KGBO])?)"
+    prefix = r"(?P<pre>((([KGBO]|T[0-9T]*O)[0-9]*)*))"
     postfix = r"(?P<post>([0-9/])*)"
     letter = '[A-Z]|Æ|Ø|Å'
     known_escaped = 'E?FU((AE|OE|AA){2}|(AE|OE|AA)[A-Z]|[A-Z](AE|OE|AA))'
