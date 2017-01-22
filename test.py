@@ -742,5 +742,47 @@ class TestTex(unittest.TestCase):
             r'OKA\$\$')
 
 
+class TestCallable(unittest.TestCase):
+
+    def test_lambda(self):
+        with tk.set_gfyear(lambda: 2013):
+            self.assertEqual(tk.get_gfyear(), 2013)
+
+    def test_called_once(self):
+        calls = 0
+
+        def get_value():
+            nonlocal calls
+            calls += 1
+            return 2013
+
+        o = tk.set_gfyear(get_value)
+        self.assertEqual(calls, 0)
+        with o:
+            self.assertEqual(calls, 1)
+            self.assertEqual(tk.get_gfyear(), 2013)
+            self.assertEqual(calls, 1)
+            self.assertEqual(tk.get_gfyear(), 2013)
+            self.assertEqual(calls, 1)
+
+    def test_called_every_time(self):
+        calls = 0
+
+        def get_value():
+            nonlocal calls
+            calls += 1
+            return 2013
+
+        @tk.set_gfyear(get_value)
+        def f():
+            pass
+
+        self.assertEqual(calls, 0)
+        f()
+        self.assertEqual(calls, 1)
+        f()
+        self.assertEqual(calls, 2)
+
+
 if __name__ == '__main__':
     unittest.main()

@@ -58,12 +58,18 @@ def get_gfyear(gfyear=None):
 
 class _Override(object):
     def __init__(self, context_gfyear):
-        self.context_gfyear = context_gfyear
+        if callable(context_gfyear):
+            self.context_gfyear_callable = context_gfyear
+        else:
+            self.context_gfyear = context_gfyear
 
     def __enter__(self):
         global _gfyear
         self.prev_gfyear = _gfyear
-        _gfyear = self.context_gfyear
+        try:
+            _gfyear = self.context_gfyear
+        except AttributeError:
+            _gfyear = self.context_gfyear_callable()
 
     def __exit__(self, exc_type, exc_value, exc_traceback):
         global _gfyear
