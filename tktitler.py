@@ -362,17 +362,11 @@ def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
     return '%s %s' % (preAndName, post)
 
 
-EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
-"""Type til :func:`email` der giver et emailnavn som postfix. f.eks. FORM12"""
-EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
-"""Type til :func:`email` der giver et emailnavn som prefix. f.eks. OEFUIT. Den
- er nyttig til EFUIT-titler hvor årstallet nødvendigvis ikke hænger sammen med
- hvornår en EFUIT var EFUIT.
-
-"""
+_EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
+_EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
-def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
+def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     """
     Givet en titel af (root, period), returner titlens emailnavn.
 
@@ -380,8 +374,16 @@ def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
                        sættes som en context. Se :doc:`gfyear`.
-    :param type: Format af output. Skal være enten
-                 :data:`EMAILTYPE_POSTFIX` eller :data:`EMAILTYPE_PREFIX`.
+    :param str type: Format af output. En af de følgende strenge:
+
+                     ``postfix``
+                         Giver et emailnavn som postfix. f.eks. FORM12.
+
+                     ``prefix``
+                         Giver et emailnavn som prefix. f.eks. OEFUIT.
+                         Den er nyttig til EFUIT-titler hvor årstallet ikke
+                         nødvendigvis hænger sammen med hvornår en EFUIT var
+                         EFUIT.
 
     :rtype: str
 
@@ -390,7 +392,7 @@ def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
     >>> tk.email(('KASS', 2011), 2017)
     'KASS11'
 
-    >>> tk.email(('FUHØ', 2010), 2016, type=tk.EMAILTYPE_PREFIX)
+    >>> tk.email(('FUHØ', 2010), 2016, type='prefix')
     'T3OFUHOE'
 
     >>> tk.email(('FUÅÆ', 2012), 2015)
@@ -404,20 +406,20 @@ def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
                     'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
     root = _multireplace(root, replace_dict)
 
-    if root == 'EFUIT' and type == EMAILTYPE_POSTFIX:
+    if root == 'EFUIT' and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an EFUIT email with postfix. The postfix '
                        'does not necessarily represent the actual year the '
                        'given EFUIT was EFUIT.')
-    if period < 1959 and type == EMAILTYPE_POSTFIX:
+    if period < 1959 and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an email from before 1959 with postfix. The '
                        'postfix does not necessarily represent the actual '
                        'year the given %s was %s.' % (root, root))
 
     pre = ""
     post = ""
-    if type == EMAILTYPE_POSTFIX:
+    if type == _EMAILTYPE_POSTFIX:
         post = str(period)[2:4]
-    elif type == EMAILTYPE_PREFIX:
+    elif type == _EMAILTYPE_PREFIX:
         pre = prefix(("", period), gfyear, type=_PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
