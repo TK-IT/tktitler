@@ -103,6 +103,20 @@ def set_gfyear(gfyear):
     ...     return tk.prepostfix(title)
     >>> get_j60_name(('FORM', 2013))
     'OFORM 2013/14'
+
+    Man kan give en lambda som argument for at beregne året på ny hver gang
+    funktionen bliver kaldt. Den givne lambda bliver kaldt én gang i starten
+    af funktionen. For eksempel:
+
+    >>> y = 2013
+    >>> @tk.set_gfyear(lambda: y)
+    ... def foo():
+    ...     return tk.prefix(('FORM', 2012))
+    >>> foo()
+    'GFORM'
+    >>> y = 2015
+    >>> foo()
+    'OFORM'
     '''
     return _Override(gfyear)
 
