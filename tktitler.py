@@ -320,15 +320,31 @@ def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
                        sættes som en context. Se :doc:`gfyear`.
-    :param prefixtype: Format af prefix. Skal være enten
-                       :data:`PREFIXTYPE_NORMAL`,
-                       :data:`PREFIXTYPE_UNICODE` eller
-                       :data:`PREFIXTYPE_TEX`.
-    :param postfixtype: Format af postfix. Skal være enten
-                        :data:`POSTFIXTYPE_SINGLE`,
-                        :data:`POSTFIXTYPE_DOUBLE`,
-                        :data:`POSTFIXTYPE_SLASH` eller
-                        :data:`POSTFIXTYPE_LONGSLASH`.
+    :param str prefixtype: Format af prefix. En af de følgende strenge:
+
+                 ``normal``
+                     Giver potenser med normale ASCII tal.
+
+                 ``unicode``
+                     Giver potenser med unicode-superscript tal.
+
+                 ``tex``
+                     Giver potenser med TeX-superscript tal samt escapede tegn.
+    :param str postfixtype: Format af postfix. En af de følgende strenge:
+
+                 ``single``
+                     Giver et tocifret postfix, f.eks. FUHI11.
+
+                 ``double``
+                     Giver et firecifret postfix, f.eks. FUHI1112
+
+                 ``slash``
+                     Giver et postfix med skråstreg og mellemrum,
+                     f.eks. FUHI 11/12
+
+                 ``longslash``
+                     Giver langt postfix med skråstreg og mellemrum,
+                     f.eks. FUHI 2011/12
 
     :rtype: str
 
