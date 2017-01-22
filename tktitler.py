@@ -117,6 +117,16 @@ def set_gfyear(gfyear):
     >>> y = 2015
     >>> foo()
     'OFORM'
+
+    Hvis man bruger constance, kan man eksempelvis hente året fra databasen:
+
+    >>> from constance import config  # doctest: +SKIP
+    >>> @tk.set_gfyear(lambda: config.GFYEAR)
+    ... def get_title_list(titles):
+    ...     result = []
+    ...     for x in titles:
+    ...         result.append(tk.prefix(x))
+    ...     return ', '.join(result)
     '''
     return _Override(gfyear)
 
