@@ -293,12 +293,12 @@ class TestEmail(unittest.TestCase):
 
     def test_postfix(self):
         self.assertEqual(
-            tk.email(("FUHØ", 2011), 2016, type=tk.EMAILTYPE_POSTFIX),
+            tk.email(("FUHØ", 2011), 2016, type='postfix'),
             "FUHOE11")
 
     def test_prefix(self):
         self.assertEqual(
-            tk.email(("FUHØ", 2011), 2016, type=tk.EMAILTYPE_PREFIX),
+            tk.email(("FUHØ", 2011), 2016, type='prefix'),
             "T2OFUHOE")
 
     @log_capture()
@@ -322,14 +322,14 @@ class TestEmail(unittest.TestCase):
     @log_capture()
     def test_EFUIT_pre(self, l):
         self.assertEqual(
-            tk.email(("EFUIT", 2016), 2016, type=tk.EMAILTYPE_PREFIX),
+            tk.email(("EFUIT", 2016), 2016, type='prefix'),
             "EFUIT")
         l.check()
 
     @log_capture()
     def test_old_title_pre(self, l):
         self.assertEqual(
-            tk.email(("BEST", 1957), 2016, type=tk.EMAILTYPE_PREFIX),
+            tk.email(("BEST", 1957), 2016, type='prefix'),
             "T56OBEST")
         l.check()
 
