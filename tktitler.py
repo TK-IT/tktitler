@@ -101,22 +101,16 @@ def set_gfyear(gfyear):
     return _Override(gfyear)
 
 
-PREFIXTYPE_NORMAL = "normal"
-"""Type til :func:`prefix` der giver output med normale ASCII tal."""
-PREFIXTYPE_UNICODE = "unicode"
-"""Type til :func:`prefix` der giver output med unicode-superscript tal."""
-PREFIXTYPE_TEX = "tex"
-"""Type til :func:`prefix` der giver output med TeX-superscript numre og
-escapede tegn.
-
-"""
+_PREFIXTYPE_NORMAL = "normal"
+_PREFIXTYPE_UNICODE = "unicode"
+_PREFIXTYPE_TEX = "tex"
 
 
 def _escape_tex(s):
     return str(s).replace('$', r'\$')
 
 
-def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
+def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
     """
     Givet en titel af (root, period), returner titlen skrevet med prefix.
 
@@ -124,9 +118,16 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
                        sættes som en context. Se :doc:`gfyear`.
-    :param type: Format af output. Skal være enten
-                 :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE` eller
-                 :data:`PREFIXTYPE_TEX`.
+    :param str type: Format af output. En af de følgende strenge:
+
+                 ``normal``
+                     Giver potenser med normale ASCII tal.
+
+                 ``unicode``
+                     Giver potenser med unicode-superscript tal.
+
+                 ``tex``
+                     Giver potenser med TeX-superscript tal samt escapede tegn.
 
     :rtype: str
 
@@ -148,7 +149,7 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
     root = _funny_substitute(root)
     age = gfyear - period
 
-    if type == PREFIXTYPE_TEX:
+    if type == _PREFIXTYPE_TEX:
         root = _escape_tex(root)
 
     def identity(n):
@@ -162,11 +163,11 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
         return '$^{%s}$' % (n,)
 
     sup_fn = None
-    if type == PREFIXTYPE_NORMAL:
+    if type == _PREFIXTYPE_NORMAL:
         sup_fn = identity
-    elif type == PREFIXTYPE_UNICODE:
+    elif type == _PREFIXTYPE_UNICODE:
         sup_fn = unicode_superscript
-    elif type == PREFIXTYPE_TEX:
+    elif type == _PREFIXTYPE_TEX:
         sup_fn = tex_superscript
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
@@ -180,7 +181,7 @@ def prefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
         return 'T%sO' % sup_fn(age - 3) + root
 
 
-def kprefix(title, gfyear=None, *, type=PREFIXTYPE_NORMAL):
+def kprefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
     """
     Givet en titel af (root, period), returner titlen skrevet med et prefix
     der starter med K.
@@ -290,7 +291,7 @@ def postfix(title, *, type=POSTFIXTYPE_SINGLE):
     return root + postfix
 
 
-def prepostfix(title, gfyear=None, *, prefixtype=PREFIXTYPE_NORMAL,
+def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
                postfixtype=POSTFIXTYPE_LONGSLASH):
     """
     Givet en titel af (root, period), returner titlen skrevet med
@@ -387,7 +388,7 @@ def email(title, gfyear=None, *, type=EMAILTYPE_POSTFIX):
     if type == EMAILTYPE_POSTFIX:
         post = str(period)[2:4]
     elif type == EMAILTYPE_PREFIX:
-        pre = prefix(("", period), gfyear, type=PREFIXTYPE_NORMAL)
+        pre = prefix(("", period), gfyear, type=_PREFIXTYPE_NORMAL)
     else:
         raise ValueError("\'%s\' is not a valid type-parameter" % type)
     assert isinstance(pre + root + post, str)
