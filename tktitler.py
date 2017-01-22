@@ -190,9 +190,17 @@ def kprefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
                         titlen og int er perioden.
     :param int gfyear: året hvor nuværende BEST er blevet valgt. Det kan også
                        sættes som en context. Se :doc:`gfyear`.
-    :param type: Format af output. Skal være enten
-                 :data:`PREFIXTYPE_NORMAL`, :data:`PREFIXTYPE_UNICODE` eller
-                 :data:`PREFIXTYPE_TEX`.
+    :param str type: Format af output. En af de følgende strenge:
+
+                 ``normal``
+                     Giver potenser med normale ASCII tal.
+
+                 ``unicode``
+                     Giver potenser med unicode-superscript tal.
+
+                 ``tex``
+                     Giver potenser med TeX-superscript tal samt escapede tegn.
+
 
     :rtype: str
 
