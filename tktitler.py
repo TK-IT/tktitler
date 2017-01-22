@@ -136,11 +136,11 @@ def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
     >>> tk.prefix(('KASS', 2011), gfyear=2016)
     'T2OKA$$'
 
-    >>> tk.prefix(('FORM', 2010), 2016, type=tk.PREFIXTYPE_UNICODE)
+    >>> tk.prefix(('FORM', 2010), 2016, type='unicode')
     'T³OFORM'
 
     >>> with tk.set_gfyear(2015):
-    ...     tk.prefix(('CERM', 2017), type=tk.PREFIXTYPE_TEX)
+    ...     tk.prefix(('CERM', 2017), type='tex')
     'K$^{2}$CERM'
 
     """
