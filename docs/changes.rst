@@ -4,6 +4,12 @@
 .. currentmodule:: tktitler
 
 
+1.0.0b1 (2016-01-24)
+------------------
+
+- Tillad at set_year() tager en callable
+- Fix doctests
+
 
 1.0.0b (2016-01-22)
 ------------------
