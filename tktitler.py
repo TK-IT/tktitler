@@ -14,6 +14,12 @@ logger = logging.getLogger(__name__)
 
 _gfyear = _GFYEAR_UNSET = object()
 
+DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
+
+
+def digraphs_lower():
+    return {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
+
 
 class _TitleABC(metaclass=abc.ABCMeta):
     pass
@@ -432,9 +438,8 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
-    replace_dict = {'æ': 'ae', 'ø': 'oe', 'å': 'aa',
-                    'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
-    root = _multireplace(root, replace_dict)
+    root = _multireplace(root, DIGRAPHS)
+    root = _multireplace(root, digraphs_lower())
 
     if root == 'EFUIT' and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an EFUIT email with postfix. The postfix '
@@ -477,15 +482,16 @@ def _normalize(input_alias):
             except ValueError:
                 return c
 
-    return re.sub(r'[^0-9A-ZÆØÅ]', lambda mo: tr(mo.group(0)), s)
+    letters = ''.join(DIGRAPHS.keys())
+    return re.sub(r'[^0-9A-Z%s]' % letters,
+                  lambda mo: tr(mo.group(0)), s)
 
 
 def _normalize_escaped(alias):
     if ("AAA" in alias and "AAAA" not in alias) or "AAE" in alias:
         raise ValueError("%s is an ambiguous alias. Cannot normalize." % alias)
-    replace_dict = {'OE': 'Ø',
-                    'AE': 'Æ',
-                    'AA': 'Å'}
+    replace_dict = {
+        digraph: character for character, digraph in DIGRAPHS.items()}
     alias = _multireplace(alias, replace_dict)
     return alias
 
@@ -554,8 +560,9 @@ def _parse_relative(input_alias):
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>((([KGBO]|T[0-9T]*O)[0-9]*)*))"
     postfix = r"(?P<post>([0-9/])*)"
-    letter = '[A-Z]|Æ|Ø|Å'
-    known_escaped = 'E?FU((AE|OE|AA){2}|(AE|OE|AA)[A-Z]|[A-Z](AE|OE|AA))'
+    letter = '[A-Z%s]' % ''.join(DIGRAPHS.keys())
+    digraphs = '(?:%s)' % '|'.join(DIGRAPHS.values())
+    known_escaped = 'E?FU(%(l)s{2}|%(l)s[A-Z]|[A-Z]%(l)s)' % dict(l=digraphs)
     known = ('CERM|FORM|INKA|KASS|NF|PR|SEKR|VC|' +
              'E?FU(?:%s){2}|' % letter +
              'BEST|FU|BESTFU')
