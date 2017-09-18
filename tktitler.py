@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 _gfyear = _GFYEAR_UNSET = object()
 
-DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA'}
+DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
 
 
 def digraphs_lower():
