@@ -4,6 +4,12 @@
 .. currentmodule:: tktitler
 
 
+1.0.x (2017-xx-xx)
+------------------
+
+- Tilføj 'UE' som forlængelse af 'Ü'
+
+
 1.0.0b1 (2016-01-24)
 ------------------
 
