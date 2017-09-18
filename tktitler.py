@@ -488,6 +488,21 @@ def _normalize(input_alias):
 
 
 def _normalize_escaped(alias):
+    # The grammar
+    #     S -> "FU" letter letter
+    #     letter -> ascii | extended
+    #     ascii -> "A" | ... | "Z"
+    #     extended -> "AA" | "AE"
+    # is ambiguous, since "FUAAA" and "FUAAE" have two derivations each:
+    #     "FUAAA" == "FU" + "AA" + "A" == "FU" + "A" + "AA"
+    #     "FUAAE" == "FU" + "AA" + "E" == "FU" + "A" + "AE"
+    # The problem arises whenever 'extended' has two productions where the
+    # first letter in one production is the last letter in another, i.e.
+    #     extended -> c1 c2
+    #     extended -> c2 c3
+    #     ascii -> c1 | c2 | c3
+    # since in that case "FU" c1 c2 c3 is ambiguous: "FU" (c1 c2) c3 or
+    # "FU" c1 (c2 c3).
     if ("AAA" in alias and "AAAA" not in alias) or "AAE" in alias:
         raise ValueError("%s is an ambiguous alias. Cannot normalize." % alias)
     replace_dict = {
