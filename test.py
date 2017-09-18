@@ -291,6 +291,12 @@ class TestEmail(unittest.TestCase):
     def test_KASS(self):
         self.assertEqual(tk.email(("KA$$", 2011), 2016), "KASS11")
 
+    def test_ue_upper(self):
+        self.assertEqual(tk.email(("FUOÜ", 2017), 2017), "FUOUE17")
+
+    def test_ue_lower(self):
+        self.assertEqual(tk.email(("fuoü", 2017), 2017), "FUOUE17")
+
     def test_postfix(self):
         self.assertEqual(
             tk.email(("FUHØ", 2011), 2016, type='postfix'),
@@ -428,6 +434,9 @@ class TestParseRelative(unittest.TestCase):
 
     def test_fu_int(self):
         self.assertEqual(tk._parse_relative('GFUOEAE14'), (1, 'FUØÆ', 2014))
+
+    def test_fu_int_2(self):
+        self.assertEqual(tk._parse_relative('FUOUE'), (0, 'FUOÜ', None))
 
     def test_lower(self):
         self.assertEqual(tk._parse_relative('gfuoeae14'), (1, 'FUØÆ', 2014))
