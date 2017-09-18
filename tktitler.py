@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 _gfyear = _GFYEAR_UNSET = object()
 
 DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
+'Dictionary der mapper hvert stort dansk bogstav til en ASCII-forlængelse.'
 
 
 class _TitleABC(metaclass=abc.ABCMeta):
