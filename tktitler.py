@@ -17,10 +17,6 @@ _gfyear = _GFYEAR_UNSET = object()
 DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
 
 
-def digraphs_lower():
-    return {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
-
-
 class _TitleABC(metaclass=abc.ABCMeta):
     pass
 
@@ -439,7 +435,8 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
 
     root = _normalize(root)
     root = _multireplace(root, DIGRAPHS)
-    root = _multireplace(root, digraphs_lower())
+    digraphs_lower = {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
+    root = _multireplace(root, digraphs_lower)
 
     if root == 'EFUIT' and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an EFUIT email with postfix. The postfix '
