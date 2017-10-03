@@ -399,6 +399,12 @@ class TestParseRelative(unittest.TestCase):
     def test_multi_prefix(self):
         self.assertEqual(tk._parse_relative('BTOKFORM'), (5, 'FORM', None))
 
+    def test_oldebolle(self):
+        self.assertEqual(tk._parse_relative("OBEFUIT"), (5, 'EFUIT', None))
+
+    def test_koldebolle(self):
+        self.assertEqual(tk._parse_relative("K5OBEFUIT"), (0, 'EFUIT', None))
+
     def test_bent(self):
         self.assertEqual(tk._parse_relative('TVC02'), (0, 'TVC', 2002))
 
