@@ -5,7 +5,7 @@ base_dir = os.path.dirname(__file__)
 
 setup(
     name='tktitler',
-    version='1.0.0b1',
+    version='1.0.0',
     description='A library for dealing with TÅGEKAMMER-titles.',
     long_description=open(os.path.join(base_dir,
                                        'readme.rst')).read(),
@@ -15,7 +15,7 @@ setup(
 
     # See https://pypi.python.org/pypi?%3Aaction=list_classifiers
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
 
         'Intended Audience :: Developers',
 
