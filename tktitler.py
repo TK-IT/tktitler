@@ -23,7 +23,7 @@ title_class = _TitleABC.register
 
 
 def get_gfyear(gfyear=None):
-    '''Returner et ikke-None argument eller det nuværende gfyear.
+    '''Returnerer et ikke-None argument eller det nuværende gfyear.
 
     :param int gfyear: kan gives en ikke-None værdi for at overskrive
                        det nuværende gfyear.
@@ -90,7 +90,7 @@ def set_gfyear(gfyear):
     Kan bruges som :std:term:`decorator` eller :std:term:`context manager`.
 
     :param int gfyear: året som relative titler i kodeblokken bliver regnet ud
-                       efter. Typisk året hvor nuværnde BEST er valgt.
+                       efter. Typisk året hvor nuværende BEST er valgt.
 
     :example:
 
