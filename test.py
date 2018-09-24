@@ -76,26 +76,6 @@ class TestPrefixNormal(unittest.TestCase):
             tk.prefix(("CERM", 2001), 2016, type='normal'),
             "T12OCERM")
 
-    def test_validation_root_int(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "int is not a valid type for root."):
-            tk.prefix((0, 2012), 2016)
-
-    def test_validation_period_float(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "float is not a valid type for period."):
-            tk.prefix(("CERM", 2012.), 2016)
-
-    def test_validation_period_string(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "str is not a valid type for period."):
-            tk.prefix(("CERM", '2012'), 2016)
-
-    def test_validation_gfyear_string(self):
-        with self.assertRaisesRegex(TypeError,
-                                    "str is not a valid type for gfyear."):
-            tk.prefix(("CERM", 2012), "2016")
-
     def test_invalid_type(self):
         with self.assertRaisesRegex(
                 ValueError,
@@ -119,6 +99,12 @@ class TestPrefixNormal(unittest.TestCase):
                 ValueError,
                 "'20010' is not a valid period"):
             tk.prefix(("CERM", 20010), 2016)
+
+    def test_invalid_gfyear_string(self):
+        with self.assertRaisesRegex(
+                TypeError,
+                "str is not a valid type for gfyear."):
+            tk.prefix(("CERM", 2012), "2016")
 
 
 class TestPrefixUnicode(unittest.TestCase):
@@ -797,6 +783,24 @@ class TestCallable(unittest.TestCase):
         self.assertEqual(calls, 1)
         f()
         self.assertEqual(calls, 2)
+
+
+class TestValidateTitle(unittest.TestCase):
+    def test_validation_root_int(self):
+        with self.assertRaisesRegex(TypeError, "int is not a valid type for root."):
+            tk.validate_title((0, 2012))
+
+    def test_validation_period_float(self):
+        with self.assertRaisesRegex(TypeError, "float is not a valid type for period."):
+            tk.validate_title(("CERM", 2012.))
+
+    def test_validation_period_string(self):
+        with self.assertRaisesRegex(TypeError, "str is not a valid type for period."):
+            tk.validate_title(("CERM", "2012"))
+
+    def test_validation_period_len(self):
+        with self.assertRaisesRegex(ValueError, "'11' is not a valid period"):
+            tk.validate_title(("CERM", 11))
 
 
 if __name__ == '__main__':
