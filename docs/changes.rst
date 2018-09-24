@@ -3,6 +3,11 @@
 
 .. currentmodule:: tktitler
 
+Unreleased
+----
+
+- Tilføj validate_title()
+
 
 1.0.0 (2018-03-09)
 ------------------

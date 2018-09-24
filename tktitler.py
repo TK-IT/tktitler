@@ -304,7 +304,7 @@ def postfix(title, *, type=_POSTFIXTYPE_SINGLE):
     'FUHØ 2011/12'
 
     """
-    root, period = _validate_title(title)
+    root, period = validate_title(title)
 
     if root == 'EFUIT':
         logger.warning('Returning an EFUIT postfix. The postfix does not '
@@ -387,7 +387,7 @@ def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
     'T2OKA$$ 2011/12'
 
     """
-    root, period = _validate_title(title)
+    root, period = validate_title(title)
     preAndName = prefix(title, gfyear, type=prefixtype)
     if root == "EFUIT" or period < 1959:
         return preAndName
@@ -639,7 +639,34 @@ def parse(alias, gfyear=None):
     return root, gfyear - age
 
 
-def _validate_title(title):
+def validate_title(title):
+    """
+    Givet en titel af (root, period), validerer om det er en gyldig titel. Kan raise TypeError eller ValueError.
+
+    :param tuple title: tupel af en str og int, hvor strengen er roden af
+                        titlen og int er perioden.
+    :rtype: tuple
+
+    :example:
+
+    >>> tk.validate_title(('KASS', 2011))
+    ('KASS', 2011)
+
+    >>> tk.validate_title((0, 2011))
+    Traceback (most recent call last):
+        ...
+    TypeError: int is not a valid type for root.
+
+    >>> tk.validate_title(('KASS', '2011'))
+    Traceback (most recent call last):
+        ...
+    TypeError: str is not a valid type for period.
+
+    >>> tk.validate_title(('KASS', 11))
+    Traceback (most recent call last):
+        ...
+    ValueError: '11' is not a valid period
+    """
     if isinstance(title, _TitleABC):
         title = title.title_tuple()
     root, period = title
@@ -655,7 +682,7 @@ def _validate_title(title):
 
 
 def _validate(title, gfyear):
-    title = _validate_title(title)
+    title = validate_title(title)
     return title, get_gfyear(gfyear)
 
 
