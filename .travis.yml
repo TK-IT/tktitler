@@ -5,6 +5,7 @@ install: "pip install -Ue .[test]"
 python:
   - "3.5"
   - "3.6"
+  - "3.7"
 
 script: coverage run --source=tktitler setup.py test
 
