@@ -641,7 +641,7 @@ def parse(alias, gfyear=None):
 
 def validate_title(title):
     """
-    Givet en titel af (root, period), validerer om det er en gyldig titel. Kan raise TypeError eller ValueError.
+    Givet en titel af (root, period), validerer om det er en gyldig titel. Kan raise ValueError.
 
     :param tuple title: tupel af en str og int, hvor strengen er roden af
                         titlen og int er perioden.
@@ -655,12 +655,12 @@ def validate_title(title):
     >>> tk.validate_title((0, 2011))
     Traceback (most recent call last):
         ...
-    TypeError: int is not a valid type for root.
+    ValueError: int is not a valid type for root.
 
     >>> tk.validate_title(('KASS', '2011'))
     Traceback (most recent call last):
         ...
-    TypeError: str is not a valid type for period.
+    ValueError: str is not a valid type for period.
 
     >>> tk.validate_title(('KASS', 11))
     Traceback (most recent call last):
@@ -671,10 +671,10 @@ def validate_title(title):
         title = title.title_tuple()
     root, period = title
     if not isinstance(root, str):
-        raise TypeError(
+        raise ValueError(
             "%s is not a valid type for root." % type(root).__name__)
     if not isinstance(period, int):
-        raise TypeError(
+        raise ValueError(
             "%s is not a valid type for period." % type(period).__name__)
     if not len(str(period)) == 4:
         raise ValueError("\'%s\' is not a valid period" % period)
