@@ -90,7 +90,7 @@ class _Override(object):
         # type: (Callable) -> Callable
         @functools.wraps(fun)
         def wrapped(*args, **kwargs):
-            # type: (*Any, **Any) -> NoReturn
+            # type: (*Any, **Any) -> Any
             with self:
                 return fun(*args, **kwargs)
 
@@ -199,8 +199,8 @@ def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
         root = _escape_tex(root)
 
     def identity(n):
-        # type: (int) -> int
-        return n
+        # type: (int) -> str
+        return str(n)
 
     def unicode_superscript(n):
         # type: (int) -> str
@@ -549,15 +549,15 @@ def _parse_postfix(postfix):
     if not isinstance(postfix, str):
         raise TypeError(type(postfix))
     if not postfix:
-        return
+        return None
 
     if '/' in postfix:
         try:
-            first, second = postfix.split('/')
+            first_str, second_str = postfix.split('/')
         except ValueError:
             raise ValueError(postfix) from None
-        lens = (len(first), len(second))
-        first, second = int(first), int(second)
+        lens = (len(first_str), len(second_str))
+        first, second = int(first_str), int(second_str)
         if lens == (2, 2) and (first + 1) % 100 == second:
             # 12/13; note that 20/21 is not ambiguous.
             return 2000 + first if first < 56 else 1900 + first
@@ -595,7 +595,7 @@ def _parse_postfix(postfix):
 
 
 def _parse_relative(input_alias):
-    # type: (str) -> Tuple[int, str, int]
+    # type: (str) -> Tuple[int, str, Optional[int]]
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>((([KGBO]|T[0-9T]*O)[0-9]*)*))"
     postfix = r"(?P<post>([0-9/])*)"
@@ -710,7 +710,7 @@ def validate_title(title):
 
 
 def _validate(title, gfyear):
-    # type: (Tuple[str, int], int) -> Tuple[Tuple[str, int], int]
+    # type: (Tuple[str, int], Optional[int]) -> Tuple[Tuple[str, int], int]
     title = validate_title(title)
     return title, get_gfyear(gfyear)
 
