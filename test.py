@@ -802,4 +802,11 @@ class TestValidateTitle(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    from pyannotate_runtime import collect_types
+    collect_types.init_types_collection()
+    try:
+        with collect_types.collect():
+            unittest.main()
+    finally:
+        collect_types.dump_stats('types.json')
+        print('done')
