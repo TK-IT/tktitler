@@ -32,8 +32,7 @@ class _TitleABC(metaclass=abc.ABCMeta):
 title_class = _TitleABC.register
 
 
-def get_gfyear(gfyear=None):
-    # type: (Optional[int]) -> int
+def get_gfyear(gfyear: Optional[int]=None) -> int:
     '''Returnerer et ikke-None argument eller det nuværende gfyear.
 
     :param int gfyear: kan gives en ikke-None værdi for at overskrive
@@ -68,15 +67,13 @@ def get_gfyear(gfyear=None):
 
 
 class _Override(object):
-    def __init__(self, context_gfyear):
-        # type: (Union[Callable, int]) -> None
+    def __init__(self, context_gfyear: Union[Callable, int]) -> None:
         if callable(context_gfyear):
             self.context_gfyear_callable = context_gfyear
         else:
             self.context_gfyear = context_gfyear
 
-    def __enter__(self):
-        # type: () -> None
+    def __enter__(self) -> None:
         global _gfyear
         self.prev_gfyear = _gfyear
         try:
@@ -84,24 +81,20 @@ class _Override(object):
         except AttributeError:
             _gfyear = self.context_gfyear_callable()
 
-    def __exit__(self, exc_type, exc_value, exc_traceback):
-        # type: (Optional[Any], Optional[Any], Optional[Any]) -> None
+    def __exit__(self, exc_type: Optional[Any], exc_value: Optional[Any], exc_traceback: Optional[Any]) -> None:
         global _gfyear
         _gfyear = self.prev_gfyear
 
-    def __call__(self, fun):
-        # type: (Callable) -> Callable
+    def __call__(self, fun: Callable) -> Callable:
         @functools.wraps(fun)
-        def wrapped(*args, **kwargs):
-            # type: (*Any, **Any) -> Any
+        def wrapped(*args, **kwargs) -> Any:
             with self:
                 return fun(*args, **kwargs)
 
         return wrapped
 
 
-def set_gfyear(gfyear):
-    # type: (Union[Callable, int]) -> _Override
+def set_gfyear(gfyear: Union[Callable, int]) -> _Override:
     '''Sæt årstallet hvor den nuværende BEST er valgt.
 
     Kan bruges som :std:term:`decorator` eller :std:term:`context manager`.
@@ -153,13 +146,11 @@ _PREFIXTYPE_UNICODE = "unicode"
 _PREFIXTYPE_TEX = "tex"
 
 
-def _escape_tex(s):
-    # type: (str) -> str
+def _escape_tex(s: str) -> str:
     return str(s).replace('$', r'\$')
 
 
-def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
-    # type: (Tuple[str, int], int, str) -> str
+def prefix(title: Tuple[str, int], gfyear: Optional[int]=None, *, type: str=_PREFIXTYPE_NORMAL) -> str:
     """
     Givet en titel af (root, period), returner titlen skrevet med prefix.
 
@@ -201,17 +192,14 @@ def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
     if type == _PREFIXTYPE_TEX:
         root = _escape_tex(root)
 
-    def identity(n):
-        # type: (int) -> str
+    def identity(n: int) -> str:
         return str(n)
 
-    def unicode_superscript(n):
-        # type: (int) -> str
+    def unicode_superscript(n: int) -> str:
         digits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
         return ''.join(digits[int(i)] for i in str(n))
 
-    def tex_superscript(n):
-        # type: (int) -> str
+    def tex_superscript(n: int) -> str:
         return '$^{%s}$' % (n,)
 
     sup_fn = None
@@ -233,8 +221,7 @@ def prefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
         return 'T%sO' % sup_fn(age - 3) + root
 
 
-def kprefix(title, gfyear=None, *, type=_PREFIXTYPE_NORMAL):
-    # type: (Tuple[str, int], int, str) -> str
+def kprefix(title: Tuple[str, int], gfyear: Optional[int]=None, *, type: str=_PREFIXTYPE_NORMAL) -> str:
     """
     Givet en titel af (root, period), returner titlen skrevet med et prefix
     der starter med K.
@@ -285,8 +272,7 @@ _POSTFIXTYPE_SLASH = "slash"  # FUHØ 11/12
 _POSTFIXTYPE_LONGSLASH = "longslash"  # FUHØ 2011/12
 
 
-def postfix(title, *, type=_POSTFIXTYPE_SINGLE):
-    # type: (Tuple[str, int], str) -> str
+def postfix(title: Tuple[str, int], *, type: str=_POSTFIXTYPE_SINGLE) -> str:
     """
     Givet en titel af (root, period), returner titlen skrevet med postfix.
 
@@ -359,9 +345,8 @@ def postfix(title, *, type=_POSTFIXTYPE_SINGLE):
     return root + postfix
 
 
-def prepostfix(title, gfyear=None, *, prefixtype=_PREFIXTYPE_NORMAL,
-               postfixtype=_POSTFIXTYPE_LONGSLASH):
-    # type: (Tuple[str, int], int, str, str) -> str
+def prepostfix(title: Tuple[str, int], gfyear: Optional[int]=None, *, prefixtype: str=_PREFIXTYPE_NORMAL,
+               postfixtype: str=_POSTFIXTYPE_LONGSLASH) -> str:
     """
     Givet en titel af (root, period), returner titlen skrevet med
     både prefix og postfix.
@@ -421,8 +406,7 @@ _EMAILTYPE_POSTFIX = "postfix"  # FUHOE11
 _EMAILTYPE_PREFIX = "prefix"  # T2OFUHOE
 
 
-def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
-    # type: (Tuple[str, int], int, str) -> str
+def email(title: Tuple[str, int], gfyear: Optional[int]=None, *, type: str=_EMAILTYPE_POSTFIX) -> str:
     """
     Givet en titel af (root, period), returner titlens emailnavn.
 
@@ -483,8 +467,7 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     return pre + root + post
 
 
-def _normalize(input_alias):
-    # type: (str) -> str
+def _normalize(input_alias: str) -> str:
     s = input_alias.upper()
     s = s.replace(' ', '')
 
@@ -495,8 +478,7 @@ def _normalize(input_alias):
              '\N{POUND SIGN}': 'S',
              '\N{DOUBLE-STRUCK CAPITAL C}': 'C'}
 
-    def tr(c):
-        # type: (str) -> str
+    def tr(c: str) -> str:
         try:
             return table[c]
         except KeyError:
@@ -510,8 +492,7 @@ def _normalize(input_alias):
                   lambda mo: tr(mo.group(0)), s)
 
 
-def _normalize_escaped(alias):
-    # type: (str) -> str
+def _normalize_escaped(alias: str) -> str:
     # The grammar
     #     S -> "FU" letter letter
     #     letter -> ascii | extended
@@ -535,8 +516,7 @@ def _normalize_escaped(alias):
     return alias
 
 
-def _parse_prefix(prefix):
-    # type: (str) -> int
+def _parse_prefix(prefix: str) -> int:
     pattern = r"^(([KGBO]|T[0-9T]*O)[0-9]*)*$"
     if not re.match(pattern, prefix):
         raise ValueError(prefix)
@@ -547,8 +527,7 @@ def _parse_prefix(prefix):
     return sum(factors)
 
 
-def _parse_postfix(postfix):
-    # type: (str) -> Optional[int]
+def _parse_postfix(postfix: str) -> Optional[int]:
     if not isinstance(postfix, str):
         raise TypeError(type(postfix))
     if not postfix:
@@ -597,8 +576,7 @@ def _parse_postfix(postfix):
     raise ValueError(postfix)
 
 
-def _parse_relative(input_alias):
-    # type: (str) -> Tuple[int, str, Optional[int]]
+def _parse_relative(input_alias: str) -> Tuple[int, str, Optional[int]]:
     alias = _normalize(input_alias)
     prefix = r"(?P<pre>((([KGBO]|T[0-9T]*O)[0-9]*)*))"
     postfix = r"(?P<post>([0-9/])*)"
@@ -630,8 +608,7 @@ def _parse_relative(input_alias):
     return age, root, gfyear
 
 
-def parse(alias, gfyear=None):
-    # type: (str, Optional[Any]) -> Tuple[str, int]
+def parse(alias: str, gfyear: Optional[int]=None) -> Tuple[str, int]:
     '''
     Givet et alias, returner en tupel af (root, period).
 
@@ -669,8 +646,7 @@ def parse(alias, gfyear=None):
     return root, gfyear - age
 
 
-def _validate_title(title):
-    # type: (Tuple[str, int]) -> Tuple[str, int]
+def _validate_title(title: Tuple[str, int]) -> Tuple[str, int]:
     if isinstance(title, _TitleABC):
         title = title.title_tuple()
     root, period = title
@@ -685,21 +661,18 @@ def _validate_title(title):
     return title
 
 
-def _validate(title, gfyear):
-    # type: (Tuple[str, int], Optional[int]) -> Tuple[Tuple[str, int], int]
+def _validate(title: Tuple[str, int], gfyear: Optional[int]) -> Tuple[Tuple[str, int], int]:
     title = _validate_title(title)
     return title, get_gfyear(gfyear)
 
 
-def _funny_substitute(root):
-    # type: (str) -> str
+def _funny_substitute(root: str) -> str:
     replace_dict = {'KASS': 'KA$$'}
     root = _multireplace(root, replace_dict)
     return root
 
 
-def _multireplace(string, replacements):
-    # type: (str, Dict[str, str]) -> str
+def _multireplace(string: str, replacements: Dict[str, str]) -> str:
     """
     Given a string and a replacement map, it returns the replaced string.
     :param str string: string to execute replacements on
