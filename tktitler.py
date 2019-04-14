@@ -684,7 +684,7 @@ def _validate(title, gfyear):
 
 
 def _funny_substitute(root):
-    replace_dict = {'KASS': 'KA$$'}
+    replace_dict = {"KASS": "KA$$", "FUUF": "FUUꟻ"}
     root = _multireplace(root, replace_dict)
     return root
 
