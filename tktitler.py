@@ -14,6 +14,9 @@ _gfyear = _GFYEAR_UNSET = object()
 DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
 'Dictionary der mapper hvert stort dansk bogstav til en ASCII-forlængelse.'
 
+_SPECIAL_CASES = (
+)
+
 
 class _TitleABC(metaclass=abc.ABCMeta):
     pass
@@ -432,9 +435,12 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
-    root = _multireplace(root, DIGRAPHS)
-    digraphs_lower = {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
-    root = _multireplace(root, digraphs_lower)
+    try:
+        root = next(email for r, p, email in _SPECIAL_CASES if (r, p) == (root, period))
+    except StopIteration:
+        root = _multireplace(root, DIGRAPHS)
+        digraphs_lower = {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
+        root = _multireplace(root, digraphs_lower)
 
     if root == 'EFUIT' and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an EFUIT email with postfix. The postfix '
@@ -634,9 +640,17 @@ def parse(alias, gfyear=None):
     '''
     age, root, postfix, needs_unescape = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
+    period = gfyear - age
     if needs_unescape:
-        root = _normalize_escaped(root)
-    return root, gfyear - age
+        try:
+            root = next(
+                normalized
+                for normalized, p, e in _SPECIAL_CASES
+                if (e, p) == (root, period)
+            )
+        except StopIteration:
+            root = _normalize_escaped(root)
+    return root, period
 
 
 def validate_title(title):
