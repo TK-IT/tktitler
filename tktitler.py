@@ -586,16 +586,17 @@ def _parse_relative(input_alias):
     mo = re.match(known_escaped_pattern, alias)
     if mo is not None:
         pre, root, post = mo.group('pre', 'root', 'post')
-        root = _normalize_escaped(root)
+        needs_unescape = True
     else:
         mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
         assert mo is not None
         pre, root, post = mo.group('pre', 'root', 'post')
         assert alias == pre + root + post
+        needs_unescape = False
 
     age = _parse_prefix(pre)
     gfyear = _parse_postfix(post)
-    return age, root, gfyear
+    return age, root, gfyear, needs_unescape
 
 
 def parse(alias, gfyear=None):
@@ -631,8 +632,10 @@ def parse(alias, gfyear=None):
     >>> tk.parse('T2OABEN', 2020)
     ('ABEN', 2015)
     '''
-    age, root, postfix = _parse_relative(alias)
+    age, root, postfix, needs_unescape = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
+    if needs_unescape:
+        root = _normalize_escaped(root)
     return root, gfyear - age
 
 
