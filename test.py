@@ -279,6 +279,15 @@ class TestEmail(unittest.TestCase):
     def test_ue_lower(self):
         self.assertEqual(tk.email(("fuoü", 2017), 2017), "FUOUE17")
 
+    def test_non_special_case(self):
+        self.assertEqual(tk.email(("FUÆU", 2020), 2020), "FUAEU20")
+
+    def test_special_case(self):
+        self.assertEqual(tk.email(("FUÄU", 2021), 2021), "FUAEU21")
+
+    def test_special_case_lower(self):
+        self.assertEqual(tk.email(("fuäu", 2021), 2021), "FUAEU21")
+
     def test_postfix(self):
         self.assertEqual(
             tk.email(("FUHØ", 2011), 2016, type='postfix'),
@@ -683,6 +692,18 @@ class TestParse(unittest.TestCase):
                                         "FUAAE is an ambiguous alias. Cannot "
                                         "normalize."):
                 tk.parse('FUAAE11')
+
+    def test_FUAEU_relative_now(self):
+        with tk.set_gfyear(2021):
+            self.assertEqual(tk.parse('FUAEU'), ('FUÄU', 2021))
+
+    def test_FUAEU_relative_next_year(self):
+        with tk.set_gfyear(2022):
+            self.assertEqual(tk.parse('GFUAEU'), ('FUÄU', 2021))
+
+    def test_FUAEU_absolute_later(self):
+        with tk.set_gfyear(2023):
+            self.assertEqual(tk.parse('FUAEU21'), ('FUÄU', 2021))
 
 
 class TestTitleRegister(unittest.TestCase):

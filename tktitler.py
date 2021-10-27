@@ -15,6 +15,8 @@ DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
 'Dictionary der mapper hvert stort dansk bogstav til en ASCII-forlængelse.'
 
 _SPECIAL_CASES = (
+    ("FUÄU", 2021, "FUAEU"),
+    ("FUÆU", 2021, "FUÆU"),
 )
 
 
@@ -431,6 +433,18 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     >>> tk.email(('FUÅÆ', 2012), 2015)
     'FUAAAE12'
 
+    >>> tk.email(("FUÄU", 2022), 2022)
+    'FUÄU22'
+
+    >>> tk.email(("FUÆU", 2022), 2022)
+    'FUAEU22'
+
+    >>> tk.email(("FUÄU", 2021), 2021)
+    'FUAEU21'
+
+    >>> tk.email(("FUÆU", 2021), 2021)
+    'FUÆU21'
+
     """
     (root, period), gfyear = _validate(title, gfyear)
 
@@ -637,6 +651,12 @@ def parse(alias, gfyear=None):
     ('UNDESERVICE', 2007)
     >>> tk.parse('T2OABEN', 2020)
     ('ABEN', 2015)
+    >>> tk.parse("FUAEU", 2020)
+    ('FUÆU', 2020)
+    >>> tk.parse("FUAEU", 2021)
+    ('FUÄU', 2021)
+    >>> tk.parse("FUAEU", 2022)
+    ('FUÆU', 2022)
     '''
     age, root, postfix, needs_unescape = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
