@@ -14,6 +14,11 @@ _gfyear = _GFYEAR_UNSET = object()
 DIGRAPHS = {'Æ': 'AE', 'Ø': 'OE', 'Å': 'AA', 'Ü': 'UE'}
 'Dictionary der mapper hvert stort dansk bogstav til en ASCII-forlængelse.'
 
+_SPECIAL_CASES = (
+    ("FUÄU", 2021, "FUAEU"),
+    ("FUÆU", 2021, "FUÆU"),
+)
+
 
 class _TitleABC(metaclass=abc.ABCMeta):
     pass
@@ -428,13 +433,28 @@ def email(title, gfyear=None, *, type=_EMAILTYPE_POSTFIX):
     >>> tk.email(('FUÅÆ', 2012), 2015)
     'FUAAAE12'
 
+    >>> tk.email(("FUÄU", 2022), 2022)
+    'FUÄU22'
+
+    >>> tk.email(("FUÆU", 2022), 2022)
+    'FUAEU22'
+
+    >>> tk.email(("FUÄU", 2021), 2021)
+    'FUAEU21'
+
+    >>> tk.email(("FUÆU", 2021), 2021)
+    'FUÆU21'
+
     """
     (root, period), gfyear = _validate(title, gfyear)
 
     root = _normalize(root)
-    root = _multireplace(root, DIGRAPHS)
-    digraphs_lower = {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
-    root = _multireplace(root, digraphs_lower)
+    try:
+        root = next(email for r, p, email in _SPECIAL_CASES if (r, p) == (root, period))
+    except StopIteration:
+        root = _multireplace(root, DIGRAPHS)
+        digraphs_lower = {ch.lower(): di.lower() for ch, di in DIGRAPHS.items()}
+        root = _multireplace(root, digraphs_lower)
 
     if root == 'EFUIT' and type == _EMAILTYPE_POSTFIX:
         logger.warning('Returning an EFUIT email with postfix. The postfix '
@@ -586,16 +606,17 @@ def _parse_relative(input_alias):
     mo = re.match(known_escaped_pattern, alias)
     if mo is not None:
         pre, root, post = mo.group('pre', 'root', 'post')
-        root = _normalize_escaped(root)
+        needs_unescape = True
     else:
         mo = re.match(known_pattern, alias) or re.match(any_pattern, alias)
         assert mo is not None
         pre, root, post = mo.group('pre', 'root', 'post')
         assert alias == pre + root + post
+        needs_unescape = False
 
     age = _parse_prefix(pre)
     gfyear = _parse_postfix(post)
-    return age, root, gfyear
+    return age, root, gfyear, needs_unescape
 
 
 def parse(alias, gfyear=None):
@@ -630,10 +651,26 @@ def parse(alias, gfyear=None):
     ('UNDESERVICE', 2007)
     >>> tk.parse('T2OABEN', 2020)
     ('ABEN', 2015)
+    >>> tk.parse("FUAEU", 2020)
+    ('FUÆU', 2020)
+    >>> tk.parse("FUAEU", 2021)
+    ('FUÄU', 2021)
+    >>> tk.parse("FUAEU", 2022)
+    ('FUÆU', 2022)
     '''
-    age, root, postfix = _parse_relative(alias)
+    age, root, postfix, needs_unescape = _parse_relative(alias)
     gfyear = postfix or get_gfyear(gfyear)
-    return root, gfyear - age
+    period = gfyear - age
+    if needs_unescape:
+        try:
+            root = next(
+                normalized
+                for normalized, p, e in _SPECIAL_CASES
+                if (e, p) == (root, period)
+            )
+        except StopIteration:
+            root = _normalize_escaped(root)
+    return root, period
 
 
 def validate_title(title):

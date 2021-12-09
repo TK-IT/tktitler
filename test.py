@@ -279,6 +279,15 @@ class TestEmail(unittest.TestCase):
     def test_ue_lower(self):
         self.assertEqual(tk.email(("fuoü", 2017), 2017), "FUOUE17")
 
+    def test_non_special_case(self):
+        self.assertEqual(tk.email(("FUÆU", 2020), 2020), "FUAEU20")
+
+    def test_special_case(self):
+        self.assertEqual(tk.email(("FUÄU", 2021), 2021), "FUAEU21")
+
+    def test_special_case_lower(self):
+        self.assertEqual(tk.email(("fuäu", 2021), 2021), "FUAEU21")
+
     def test_postfix(self):
         self.assertEqual(
             tk.email(("FUHØ", 2011), 2016, type='postfix'),
@@ -373,92 +382,97 @@ class TestOverride(unittest.TestCase):
 class TestParseRelative(unittest.TestCase):
 
     def test_relative_current(self):
-        self.assertEqual(tk._parse_relative('FORM'), (0, 'FORM', None))
+        self.assertEqual(tk._parse_relative("FORM"), (0, "FORM", None, False))
 
     def test_simple_prefix(self):
-        self.assertEqual(tk._parse_relative('GFORM'), (1, 'FORM', None))
+        self.assertEqual(tk._parse_relative("GFORM"), (1, "FORM", None, False))
 
     def test_multi_prefix(self):
-        self.assertEqual(tk._parse_relative('BTOKFORM'), (5, 'FORM', None))
+        self.assertEqual(tk._parse_relative("BTOKFORM"), (5, "FORM", None, False))
 
     def test_oldebolle(self):
-        self.assertEqual(tk._parse_relative("OBEFUIT"), (5, 'EFUIT', None))
+        self.assertEqual(tk._parse_relative("OBEFUIT"), (5, "EFUIT", None, False))
 
     def test_koldebolle(self):
-        self.assertEqual(tk._parse_relative("K5OBEFUIT"), (0, 'EFUIT', None))
+        self.assertEqual(tk._parse_relative("K5OBEFUIT"), (0, "EFUIT", None, False))
 
     def test_bent(self):
-        self.assertEqual(tk._parse_relative('TVC02'), (0, 'TVC', 2002))
+        self.assertEqual(tk._parse_relative("TVC02"), (0, "TVC", 2002, False))
 
     def test_temp_title(self):
-        self.assertEqual(tk._parse_relative('BTFORM'), (2, 'TFORM', None))
+        self.assertEqual(tk._parse_relative("BTFORM"), (2, "TFORM", None, False))
 
     def test_t_before_k(self):
-        self.assertEqual(tk._parse_relative('TKFORM'), (0, 'TKFORM', None))
+        self.assertEqual(tk._parse_relative("TKFORM"), (0, "TKFORM", None, False))
 
     def test_t_before_g(self):
-        self.assertEqual(tk._parse_relative('TGFORM'), (0, 'TGFORM', None))
+        self.assertEqual(tk._parse_relative("TGFORM"), (0, "TGFORM", None, False))
 
     def test_t_before_b(self):
-        self.assertEqual(tk._parse_relative('TBFORM'), (0, 'TBFORM', None))
+        self.assertEqual(tk._parse_relative("TBFORM"), (0, "TBFORM", None, False))
 
     def test_t3_before_b(self):
-        self.assertEqual(tk._parse_relative('T3BFORM'), (0, 'T3BFORM', None))
+        self.assertEqual(tk._parse_relative("T3BFORM"), (0, "T3BFORM", None, False))
 
     def test_exponent(self):
-        self.assertEqual(tk._parse_relative('OT2OFORM'), (8, 'FORM', None))
+        self.assertEqual(tk._parse_relative("OT2OFORM"), (8, "FORM", None, False))
 
     def test_short_postfix(self):
-        self.assertEqual(tk._parse_relative('OT2OFORM16'), (8, 'FORM', 2016))
+        self.assertEqual(tk._parse_relative("OT2OFORM16"), (8, "FORM", 2016, False))
 
     def test_long_postfix(self):
-        self.assertEqual(tk._parse_relative('FORM1516'), (0, 'FORM', 2015))
+        self.assertEqual(tk._parse_relative("FORM1516"), (0, "FORM", 2015, False))
 
     def test_full_postfix(self):
-        self.assertEqual(tk._parse_relative('FORM2015'), (0, 'FORM', 2015))
+        self.assertEqual(tk._parse_relative("FORM2015"), (0, "FORM", 2015, False))
 
     def test_fu(self):
-        self.assertEqual(tk._parse_relative('GFU14'), (1, 'FU', 2014))
+        self.assertEqual(tk._parse_relative("GFU14"), (1, "FU", 2014, False))
 
     def test_fu_int(self):
-        self.assertEqual(tk._parse_relative('GFUOEAE14'), (1, 'FUØÆ', 2014))
+        self.assertEqual(tk._parse_relative("GFUOEAE14"), (1, "FUOEAE", 2014, True))
+        self.assertEqual(tk._normalize_escaped("FUOEAE"), "FUØÆ")
 
     def test_fu_int_2(self):
-        self.assertEqual(tk._parse_relative('FUOUE'), (0, 'FUOÜ', None))
+        self.assertEqual(tk._parse_relative("FUOUE"), (0, "FUOUE", None, True))
+        self.assertEqual(tk._normalize_escaped("FUOUE"), "FUOÜ")
 
     def test_lower(self):
-        self.assertEqual(tk._parse_relative('gfuoeae14'), (1, 'FUØÆ', 2014))
+        self.assertEqual(tk._parse_relative("gfuoeae14"), (1, "FUOEAE", 2014, True))
+        self.assertEqual(tk._normalize_escaped("FUOEAE"), "FUØÆ")
 
     def test_unicode_superscript(self):
-        self.assertEqual(tk._parse_relative('T²OFORM'), (5, 'FORM', None))
+        self.assertEqual(tk._parse_relative("T²OFORM"), (5, "FORM", None, False))
 
     def test_kass_dollar(self):
-        self.assertEqual(tk._parse_relative('GKA$$'), (1, 'KASS', None))
+        self.assertEqual(tk._parse_relative("GKA$$"), (1, "KASS", None, False))
 
     def test_kass_funny(self):
-        self.assertEqual(tk._parse_relative('GKA$\N{POUND SIGN}'),
-                         (1, 'KASS', None))
+        self.assertEqual(
+            tk._parse_relative("GKA$\N{POUND SIGN}"), (1, "KASS", None, False)
+        )
 
     def test_cerm_funny(self):
-        self.assertEqual(tk._parse_relative('\N{DOUBLE-STRUCK CAPITAL C}ERM'),
-                         (0, 'CERM', None))
+        self.assertEqual(
+            tk._parse_relative("\N{DOUBLE-STRUCK CAPITAL C}ERM"),
+            (0, "CERM", None, False),
+        )
 
     def test_unknown(self):
-        self.assertEqual(tk._parse_relative('OABEN'),
-                         (3, 'ABEN', None))
+        self.assertEqual(tk._parse_relative("OABEN"), (3, "ABEN", None, False))
 
     def test_prefix(self):
-        self.assertEqual(tk._parse_relative('G12'), (12, '', None))
+        self.assertEqual(tk._parse_relative("G12"), (12, "", None, False))
 
     def test_postfix(self):
-        self.assertEqual(tk._parse_relative('12'), (0, '', 2012))
+        self.assertEqual(tk._parse_relative("12"), (0, "", 2012, False))
 
     def test_bestfu(self):
-        self.assertEqual(tk._parse_relative('BESTFU'), (0, 'BESTFU', None))
+        self.assertEqual(tk._parse_relative("BESTFU"), (0, "BESTFU", None, False))
 
     @log_capture()
     def test_2021(self, l):
-        self.assertEqual(tk._parse_relative('FORM2021'), (0, 'FORM', 2020))
+        self.assertEqual(tk._parse_relative("FORM2021"), (0, "FORM", 2020, False))
 
         l.check(
             ('tktitler', 'WARNING', 'While parsing an alias, the technically '
@@ -468,7 +482,7 @@ class TestParseRelative(unittest.TestCase):
 
     @log_capture()
     def test_2021_slash(self, l):
-        self.assertEqual(tk._parse_relative('FORM20/21'), (0, 'FORM', 2020))
+        self.assertEqual(tk._parse_relative("FORM20/21"), (0, "FORM", 2020, False))
         l.check()
 
     def test_invalid_slash(self):
@@ -678,6 +692,18 @@ class TestParse(unittest.TestCase):
                                         "FUAAE is an ambiguous alias. Cannot "
                                         "normalize."):
                 tk.parse('FUAAE11')
+
+    def test_FUAEU_relative_now(self):
+        with tk.set_gfyear(2021):
+            self.assertEqual(tk.parse('FUAEU'), ('FUÄU', 2021))
+
+    def test_FUAEU_relative_next_year(self):
+        with tk.set_gfyear(2022):
+            self.assertEqual(tk.parse('GFUAEU'), ('FUÄU', 2021))
+
+    def test_FUAEU_absolute_later(self):
+        with tk.set_gfyear(2023):
+            self.assertEqual(tk.parse('FUAEU21'), ('FUÄU', 2021))
 
 
 class TestTitleRegister(unittest.TestCase):
